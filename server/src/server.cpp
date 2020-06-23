@@ -25,6 +25,7 @@ int run_server(){
         fd_set master;
         FD_ZERO(&master);
         int bytesReceived;
+
         /////////////////CONEXION TCP/////////////////////
 
         /**
@@ -114,19 +115,28 @@ int run_server(){
         socklen_t clientSize_udp = sizeof(client_udp);
         char buf_udp[1024];
 
+        ////////////////SERVIDOR UDP (JUEGO)//////////
+        /**
+         * @note Enlaza una ip y un numero de puerto al socket.
+         */
+        sockaddr_in udpGameServer;
+        udpGameServer.sin_family = AF_INET;
+        udpGameServer.sin_port = htons(52000);
+        inet_pton(AF_INET, "0.0.0.0", &udpGameServer.sin_addr);
 
         /////////////////SELECT///////////////////////
         FD_SET(clientSocket_tcp, &master);
         FD_SET(clientSocket_udp, &master);
 
         int maxfdp1 = max(clientSocket_tcp, clientSocket_udp) + 1;
+
         /**
          * @note Espera que el cliente envie un dato.
          */
         while(true){
             fd_set copy = master;
             int socketCount = select(maxfdp1, &copy, nullptr, nullptr, nullptr);
-            cout << "here" << endl;
+
             if (socketCount == -1){
                 cout << "Socket error." << endl;
                 break;
@@ -159,7 +169,7 @@ int run_server(){
                 /**
                  * @note Respuesta del servidor.
                  */
-                string response = "Server response.\n";
+                string response = "Resp (TCP): " + petition;
                 send(clientSocket_tcp, response.c_str(), response.size() + 1, 0);
 
             }
@@ -182,8 +192,9 @@ int run_server(){
                 /**
                  * @note Respuesta del servidor.
                  */
-                string response = "Server response.\n";
-                send(clientSocket_tcp, response.c_str(), response.size() + 1, 0);
+                string response = "Resp (UDP): " + petition;
+                sendto(clientSocket_udp, response.c_str(), response.size() + 1,
+                         0, (sockaddr*)&udpGameServer, sizeof(udpGameServer));
             }
             
         }
