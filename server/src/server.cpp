@@ -80,7 +80,7 @@ int run_server(){
         /**
          * @note Envia un mensaje inicial al cliente.
          */
-        string message = "msg,tcp conectado";
+        string message = "TCP conectado";
         send(clientSocket_tcp, message.c_str(), message.size() + 1, 0);
         
         /**
@@ -164,7 +164,7 @@ int run_server(){
                  */
                 string petition;
                 petition = string(buf, 0, bytesReceived);
-                cout << "TCP: " << petition << endl;
+                //cout << "TCP: " << petition << endl;
 
                 /**
                  * @note Respuesta del servidor.
@@ -187,12 +187,12 @@ int run_server(){
                  */
                 string petition;
                 petition = string(buf_udp, 0, bytesReceived);
-                cout << "UDP: " << petition << endl;
+                //cout << "UDP: " << petition << endl;
 
                 /**
                  * @note Respuesta del servidor.
                  */
-                string response = "Resp (UDP): " + petition;
+                string response = "SERVER: " + process(petition);
                 sendto(clientSocket_udp, response.c_str(), response.size() + 1,
                          0, (sockaddr*)&udpGameServer, sizeof(udpGameServer));
             }

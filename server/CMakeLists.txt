@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED 14)
 set(src 
     src/main.cpp
     src/server.cpp
+    src/process.cpp
 )
 
 set(head
