@@ -35,7 +35,7 @@ int server::run_server()
         /////////////////SELECT///////////////////////
         fd_set master;
         FD_ZERO(&master);
-        int bytesReceived;
+        int bytesReceived; //Bytes recibidos del cliente.
 
         /////////////////CONEXION TCP/////////////////////
 
@@ -137,7 +137,7 @@ int server::run_server()
         udpGameServer.sin_port = htons(52000);
         inet_pton(AF_INET, "0.0.0.0", &udpGameServer.sin_addr);
 
-        bind(sendSocket_udp, (sockaddr *)&udpGameServer, sizeof(udpGameServer));
+        bind(clientSocket_udp, (sockaddr *)&udpGameServer, sizeof(udpGameServer));
 
         /////////////////SELECT///////////////////////
         FD_SET(clientSocket_tcp, &master);

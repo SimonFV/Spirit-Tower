@@ -22,7 +22,6 @@ private:
 
     int clientSocket_tcp;
     int clientSocket_udp;
-    int sendSocket_udp;
     sockaddr_in udpGameServer;
     string petition;
 
@@ -38,7 +37,7 @@ public:
     /**
      * @brief Inicia el servidor tipo socket.
      * 
-     * El servidor esperara a que un cliente se conecte, analizara los mensajes recibidos
+     * El servidor esperara a que un cliente se conecte, analizará los mensajes recibidos
      * y devolvera la respuesta correspondiente.
      * 
      * @return Resultado de la operacion.
@@ -46,10 +45,10 @@ public:
     int run_server();
 
     /**
-     * @brief Inicia el servidor tipo socket.
+     * @brief Envia mensajes al cliente.
      * 
-     * El servidor esperara a que un cliente se conecte, analizara los mensajes recibidos
-     * y devolvera la respuesta correspondiente.
+     * Este método revisa primero que hayan mensajes en la cola para ser enviados, de ser
+     * así, los envía en orden de lista.
      */
     void send_msg();
 };

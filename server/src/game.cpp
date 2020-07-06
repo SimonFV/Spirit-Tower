@@ -12,10 +12,14 @@ void game::checkUpdates()
 
 void game::run_game()
 {
-    thread send;
+    thread send, moveEnemies;
     send = thread(game::checkUpdates);
 
-    server::getInstance()->run_server();
+    int result = server::getInstance()->run_server();
+    if (result == -1)
+    {
+        cout << "Error al iniciar el servidor." << endl;
+    }
 
     send.join();
 }
