@@ -1,37 +1,11 @@
-## Welcome to GitHub Pages
+#  Proyecto #2  -  Spirit Tower 
 
-You can use the [editor on GitHub](https://github.com/SimonFV/Spirit-Tower/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+* <p align="justify"> Spirit tower es un juego de aventura que consiste en investigar un templo lleno de tesoros, donde patrullan espectros, los cuales al encontrar al jugador, lo perseguirán para evitar que avance a través de los niveles del templo. El juego consta de 5 niveles, diferentes tipos de espectros y además, posee un servidor que va a contener toda la información del juego así como un cliente que se va a desarrollar con el propósito de ser multiplataforma y que este interactúe propiamente con el jugador.
+</p>
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+<br/>
+<br/>
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/SimonFV/Spirit-Tower/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+<p align="center">
+  <img width="880" height="480" src="https://clio44.files.wordpress.com/2014/09/wpid-1409968796236.gif">
+</p>
