@@ -15,22 +15,57 @@
 #include <mutex>
 using namespace std;
 
+/**
+ * Clase server que contiene la arquitectura del servidor del juego
+ */
 class server
 {
 private:
+    /**
+     * Variable que almacena la instancia del servidor
+     */
     static server *server_instance;
 
+    /**
+     * Variable que contiene el socket tcp del cliente
+     */
     int clientSocket_tcp;
+    /**
+     * Variable que contiene el soket udp del cliente
+     */
     int clientSocket_udp;
+    /**
+     * Variable que almacena la dirección del socket
+     */
     sockaddr_in udpGameServer;
+    /**
+     * Varriable que contiene el tipo de petición hecha por el usuario
+     */
     string petition;
 
+    /**
+     * Constructor de la clase server
+     */
     server() {}
+    /**
+     * Destructor de la clase server
+     */
     ~server() {}
 
 public:
+    /**
+     * Método que obtiene la instancia del servidor
+     * @return - Instancia del servidor
+     */
     static server *getInstance();
+    /**
+     * Método que evita la reasignación de la instancia del servidor
+     * @param other - Servidor creado
+     */
     server(server &other) = delete;
+    /**
+     * Método que evita la reasignación de la instancia del servidor
+     */
     void operator=(const server &) = delete;
 
 public:
