@@ -13,7 +13,7 @@ public class EnterDoor : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D collision) {
 		if (collision.gameObject.tag == "Player") {
 
-			if (collision.gameObject.GetComponent<PlayerMovement>().clave == true)
+			if (collision.gameObject.GetComponent<PlayerMovement>().getKey() == true)
 			{
 				animator.SetBool("Collition", true);
 				boxCollider.isTrigger = true;

@@ -204,6 +204,8 @@ int server::run_server()
             /**
              * @note Devuelve el mismo mensaje.
              */
+
+            sendMsgTcp(game::process_data(petition));
         }
 
         FD_CLR(clientSocket_tcp, &master);

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class OpenChest : MonoBehaviour
 {
@@ -8,25 +9,50 @@ public class OpenChest : MonoBehaviour
 	Animator animator;
 	[SerializeField]
 	BoxCollider2D boxCollider;
-	/*
-	void OnCollisionEnter2D(Collision2D collision)
-	{
-		if (collision.gameObject.tag == "Player")
-		{
 
-			animator.SetBool("Collition", true);
+	static int contador;
 
-		}
-	}
-	*/
+    [SerializeField]
+    Text text;
 
-    private void OnCollisionStay2D(Collision2D collision)
+    IEnumerator waiter()  
     {
-        if (Input.GetAxis("Jump") == 1)
-        {
-			animator.SetBool("Collition", true);
-		}
+        text.enabled = true;
 
+        yield return new WaitForSeconds(3);
+
+        text.enabled = false;
+    }
+
+    private void Awake()
+    {
+
+        contador = 1;
+        text.enabled = false;
+
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+		animator.SetBool("Collition", true);
+
+        if(contador == 3)
+        {
+            collision.gameObject.GetComponent<PlayerMovement>().setKey(true);
+            contador = 0;
+
+
+            StartCoroutine(waiter());
+
+        
+
+        }
+        else
+        {
+
+        contador++;
+
+        }
 
     }
 

@@ -45,7 +45,7 @@ public class Client : MonoBehaviour
         Byte[] senddata = Encoding.ASCII.GetBytes(send_msg);
         udpClientSend.Send(senddata, senddata.Length);
     }
-
+    /*
     // Start is called before the first frame update
     void Start()
     {
@@ -90,12 +90,12 @@ public class Client : MonoBehaviour
     }
 
     void FixedUpdate()
-    {
+    {   
         //Set up async read
         tcpStream = tcpClient.GetStream();
         tcpStream.BeginRead(tcpBuffer, 0, tcpBuffer.Length, ReceivedTCP, null);
     }
-
+    */
 
     void ReceivedTCP(IAsyncResult _result)
     {

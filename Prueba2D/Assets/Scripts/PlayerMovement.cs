@@ -3,116 +3,161 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Experimental.Rendering.Universal;
 
-public class PlayerMovement : MonoBehaviour {
+public class PlayerMovement : MonoBehaviour
+{
 
-	public bool clave;
+    [SerializeField]
+    private bool clave;
 
-	[SerializeField]
-	private Image heart;
+    [SerializeField]
+    private Light2D light;
 
-	[SerializeField]
-	private Image heart2;
+    [SerializeField]
+    private Image heart;
 
-	[SerializeField]
-	private Image heart3;
+    [SerializeField]
+    private Image heart2;
 
-	[SerializeField]
-	private int life;
+    [SerializeField]
+    private Image heart3;
 
-	[SerializeField]
-	private float speed = 5;
-	
-	[SerializeField]
-	private Animator animator;
+    [SerializeField]
+    private int life;
 
-	private Rigidbody2D rb;
+    [SerializeField]
+    private float speed = 5;
 
-	[SerializeField]
-	private Camera camara;
+    [SerializeField]
+    private Animator animator;
 
+    private Rigidbody2D rb;
 
-	private void setLife()
+    [SerializeField]
+    private Camera camara;
+
+    [SerializeField]
+    private Client client;
+    private Vector3Int playerPos;
+    [SerializeField]
+    private Grid grid;
+
+    private void putLife()
     {
 
-		if (life == 3)
-		{
+        if (life == 3)
+        {
 
-			heart.GetComponent<Animator>().SetBool("hit", false);
-			heart2.GetComponent<Animator>().SetBool("hit", false);
-			heart3.GetComponent<Animator>().SetBool("hit", false);
+            heart.GetComponent<Animator>().SetBool("hit", false);
+            heart2.GetComponent<Animator>().SetBool("hit", false);
+            heart3.GetComponent<Animator>().SetBool("hit", false);
 
-		}
+        }
 
-		else if (life == 2)
-		{
+        else if (life == 2)
+        {
 
-			heart.GetComponent<Animator>().SetBool("hit", true);
-			heart2.GetComponent<Animator>().SetBool("hit", false);
-			heart3.GetComponent<Animator>().SetBool("hit", false);
+            heart.GetComponent<Animator>().SetBool("hit", true);
+            heart2.GetComponent<Animator>().SetBool("hit", false);
+            heart3.GetComponent<Animator>().SetBool("hit", false);
 
-		}
+        }
 
-		else if (life == 1)
-		{
+        else if (life == 1)
+        {
 
-			heart.GetComponent<Animator>().SetBool("hit", true);
-			heart2.GetComponent<Animator>().SetBool("hit", true);
-			heart3.GetComponent<Animator>().SetBool("hit", false);
+            heart.GetComponent<Animator>().SetBool("hit", true);
+            heart2.GetComponent<Animator>().SetBool("hit", true);
+            heart3.GetComponent<Animator>().SetBool("hit", false);
 
-		}
+        }
 
-		else if (life == 0)
-		{
+        else if (life == 0)
+        {
 
-			heart.GetComponent<Animator>().SetBool("hit", true);
-			heart2.GetComponent<Animator>().SetBool("hit", true);
-			heart3.GetComponent<Animator>().SetBool("hit", true);
+            heart.GetComponent<Animator>().SetBool("hit", true);
+            heart2.GetComponent<Animator>().SetBool("hit", true);
+            heart3.GetComponent<Animator>().SetBool("hit", true);
 
-		}
+        }
 
-	}
+    }
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
 
 
-		
-	}
+
+    }
 
     private void Awake()
     {
 
-		rb = GetComponent<Rigidbody2D>();
-		life = 3;
+        rb = GetComponent<Rigidbody2D>();
+        life = 3;
 
     }
 
     // Update is called once per frame
-    void FixedUpdate () {
+    void FixedUpdate()
+    {
 
-		if (rb.velocity.x > 0)
-		{
-			transform.localScale = new Vector2(1, transform.localScale.y);
+        this.putLife();
 
-		}else if (rb.velocity.x < 0)
-		{
-			transform.localScale = new Vector2(-1, transform.localScale.y);
-		}
+        if (rb.velocity.x > 0)
+        {
+            transform.localScale = new Vector2(1, transform.localScale.y);
 
-		camara.transform.position = new Vector3(transform.position.x, transform.position.y, camara.transform.position.z); ;
+        }
+        else if (rb.velocity.x < 0)
+        {
+            transform.localScale = new Vector2(-1, transform.localScale.y);
+        }
+
+        camara.transform.position = new Vector3(transform.position.x, transform.position.y, camara.transform.position.z); ;
+
+        if (light != null)
+        {
+            light.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, 0);
+        }
 
 
-		float horizontal = Input.GetAxis ("Horizontal");
-		float vertical = Input.GetAxis ("Vertical");
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
 
-		rb.velocity = new Vector2 (horizontal * speed, vertical * speed);
+        rb.velocity = new Vector2(horizontal * speed, vertical * speed);
 
-		animator.SetFloat("Velocidad", Mathf.Abs(horizontal) + Mathf.Abs(vertical));
+        animator.SetFloat("Velocidad", Mathf.Abs(horizontal) + Mathf.Abs(vertical));
+        /*
+        //Envía la posición al servidor
+        if (rb.velocity.magnitude != 0)
+        {
+            playerPos = grid.WorldToCell(rb.transform.position);
+            client.sendMsgUDP(playerPos.ToString("0"));
+        }
+		*/
 
-		this.setLife();
+    }
 
-	}
+    public int getLife()
+    {
+        return this.life;
+    }
 
+    public bool getKey()
+    {
+        return this.clave;
+    }
+
+    public void setKey(bool key)
+    {
+        this.clave = key;
+    }
+    public void setLife(int life)
+    {
+        this.life = life;
+    }
 
 }

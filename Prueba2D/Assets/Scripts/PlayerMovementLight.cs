@@ -8,7 +8,8 @@ using UnityEngine.Experimental.Rendering.Universal;
 public class PlayerMovementLight : MonoBehaviour
 {
 
-	public bool clave;
+	[SerializeField]
+	private bool clave;
 
 	[SerializeField]
 	private Light2D light;
@@ -119,6 +120,22 @@ public class PlayerMovementLight : MonoBehaviour
 		animator.SetFloat("Velocidad", Mathf.Abs(horizontal) + Mathf.Abs(vertical));
 
 		this.setLife();
+	}
+
+
+	public int getLife()
+	{
+		return this.life;
+	}
+
+	public bool getKey()
+	{
+		return this.clave;
+	}
+
+	public void setKey(bool key)
+	{
+		this.clave = key;
 	}
 }
 

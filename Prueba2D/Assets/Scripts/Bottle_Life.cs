@@ -26,6 +26,11 @@ public class Bottle_Life : MonoBehaviour
 
         if (collision.gameObject.tag == "Player")
         {
+            PlayerMovement player = collision.gameObject.GetComponent<PlayerMovement>();
+            if ((player.getLife() != 3) && (player.getLife() != 0))
+            {
+                collision.gameObject.GetComponent<PlayerMovement>().setLife(player.getLife() + 1);
+            }
 
             boxCollider.isTrigger = true;
             this.GetComponent<SpriteRenderer>().enabled = false;

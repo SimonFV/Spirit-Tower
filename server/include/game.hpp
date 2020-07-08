@@ -75,7 +75,7 @@ public:
      * @param data Petición realizada
      * @return String con el dato de la petición
      */
-    string process_data(string data);
+    static string process_data(string data);
 };
 
 #endif

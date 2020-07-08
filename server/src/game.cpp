@@ -5,7 +5,7 @@ void game::moveEnemies()
 {
     while (true)
     {
-        server::getInstance()->sendMsgTcp("Moviendo enemigo...");
+        //server::getInstance()->sendMsgTcp("Moviendo enemigo...");
         usleep(1000000);
     }
 }
@@ -37,4 +37,5 @@ void game::run_game()
 
 string game::process_data(string data)
 {
+    return data;
 }
