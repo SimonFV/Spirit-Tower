@@ -2,10 +2,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour {
 
 	public bool clave;
+
+	[SerializeField]
+	private Image heart;
+
+	[SerializeField]
+	private Image heart2;
+
+	[SerializeField]
+	private Image heart3;
+
+	[SerializeField]
+	private int life;
 
 	[SerializeField]
 	private float speed = 5;
@@ -17,7 +30,49 @@ public class PlayerMovement : MonoBehaviour {
 
 	[SerializeField]
 	private Camera camara;
- 
+
+
+	private void setLife()
+    {
+
+		if (life == 3)
+		{
+
+			heart.GetComponent<Animator>().SetBool("hit", false);
+			heart2.GetComponent<Animator>().SetBool("hit", false);
+			heart3.GetComponent<Animator>().SetBool("hit", false);
+
+		}
+
+		else if (life == 2)
+		{
+
+			heart.GetComponent<Animator>().SetBool("hit", true);
+			heart2.GetComponent<Animator>().SetBool("hit", false);
+			heart3.GetComponent<Animator>().SetBool("hit", false);
+
+		}
+
+		else if (life == 1)
+		{
+
+			heart.GetComponent<Animator>().SetBool("hit", true);
+			heart2.GetComponent<Animator>().SetBool("hit", true);
+			heart3.GetComponent<Animator>().SetBool("hit", false);
+
+		}
+
+		else if (life == 0)
+		{
+
+			heart.GetComponent<Animator>().SetBool("hit", true);
+			heart2.GetComponent<Animator>().SetBool("hit", true);
+			heart3.GetComponent<Animator>().SetBool("hit", true);
+
+		}
+
+	}
+
 	// Use this for initialization
 	void Start () {
 
@@ -29,6 +84,7 @@ public class PlayerMovement : MonoBehaviour {
     {
 
 		rb = GetComponent<Rigidbody2D>();
+		life = 3;
 
     }
 
@@ -54,5 +110,9 @@ public class PlayerMovement : MonoBehaviour {
 
 		animator.SetFloat("Velocidad", Mathf.Abs(horizontal) + Mathf.Abs(vertical));
 
+		this.setLife();
+
 	}
+
+
 }

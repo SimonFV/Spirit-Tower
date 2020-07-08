@@ -155,7 +155,7 @@ int server::run_server()
 
             if (socketCount == -1)
             {
-                cout << "Socket error." << endl;
+                cout << "Error en el socket." << endl;
                 break;
             }
             if (socketCount == 0)
@@ -172,12 +172,12 @@ int server::run_server()
                 bytesReceived = recv(clientSocket_tcp, buf, 4096, 0);
                 if (bytesReceived == -1)
                 {
-                    cerr << "Error al recibir el mensaje" << endl;
+                    cerr << "Error al recibir el mensaje." << endl;
                     break;
                 }
                 if (bytesReceived == 0)
                 {
-                    cout << "Cliente desconectado" << endl;
+                    cout << "Cliente desconectado." << endl;
                     break;
                 }
                 /**

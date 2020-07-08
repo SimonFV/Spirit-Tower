@@ -23,6 +23,8 @@ class game
 {
 private:
     int grid[200][200];
+    unordered_map<int, ghost *> list;
+    player p1;
 
 public:
     game() {}
@@ -30,6 +32,7 @@ public:
 
 public:
     static void checkUpdates();
+    static void moveEnemies();
     void run_game();
     string process_data(string data);
 };

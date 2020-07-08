@@ -8,34 +8,42 @@ using System.Net;
 using System.Text;
 using System;
 
-public class MainMenu : MonoBehaviour{   
+public class MainMenu : MonoBehaviour
+{
     public Text status;
     TcpClient tcpClient;
-    public string ip ="127.0.0.1";
+    public string ip = "127.0.0.1";
     public int port = 54000;
 
-    public void playGame(){
+    public void playGame()
+    {
         status.text = "Conectandose al servidor...";
         tcpClient = new TcpClient();
-        try{
+        try
+        {
             tcpClient.Connect(ip, port);
         }
-        catch(SocketException){
+        catch (SocketException)
+        {
             status.text = "Servidor no encontrado.";
         }
-        if(tcpClient.Connected){
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        if (tcpClient.Connected)
+        {
+            SceneManager.LoadScene(1);
         }
-        
+
     }
 
-    void OnDestroy(){
-        if(tcpClient.Connected){
+    void OnDestroy()
+    {
+        if (tcpClient.Connected)
+        {
             tcpClient.Close();
         }
     }
 
-    public void quitGame(){
+    public void quitGame()
+    {
         Application.Quit();
     }
 }
