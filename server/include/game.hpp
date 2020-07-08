@@ -70,8 +70,6 @@ public:
     static void checkUpdates();
     static void moveEnemies();
     void run_game();
-    static void sendMsgTcp(string msg);
-    static void sendMsgUdp(string msg);
     /**
      * Método que procesa el dato ingresado para validar la petición realizada
      * @param data Petición realizada

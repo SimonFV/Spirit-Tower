@@ -86,6 +86,8 @@ public:
      * así, los envía en orden de lista.
      */
     void send_msg();
+    void sendMsgTcp(string msg);
+    void sendMsgUdp(string msg);
 };
 
 #endif
