@@ -11,7 +11,7 @@ using namespace std;
 /**
  * @note Mensajes utilizados por los distintos threads y las llaves para accesarlos.
  */
- /**
+/**
   * Variable utilizada para verificar si se envían correctamente los datos
   */
 static mutex access_send;
@@ -68,13 +68,7 @@ public:
      * Método que verifica si hay actualizaciones del juego en cuanto a peticiones
      */
     static void checkUpdates();
-<<<<<<< HEAD
     static void moveEnemies();
-=======
-    /**
-     * Método que ejecuta el juego
-     */
->>>>>>> b725276867f9950c9fb06536e2ff8fdf42b3e12f
     void run_game();
     /**
      * Método que procesa el dato ingresado para validar la petición realizada
