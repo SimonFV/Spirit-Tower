@@ -204,21 +204,6 @@ int server::run_server()
             /**
              * @note Devuelve el mismo mensaje.
              */
-            access_send.lock();
-            int i = 0;
-            while (msg_send_udp[i] != "" && i < sizeof(msg_send_udp) / sizeof(msg_send_udp[0]) - 1)
-            {
-                i++;
-            }
-            msg_send_udp[i] = petition;
-            i = 0;
-            while (msg_send_tcp[i] != "" && i < sizeof(msg_send_tcp) / sizeof(msg_send_tcp[0]) - 1)
-            {
-                i++;
-            }
-            msg_send_tcp[i] = petition;
-            is_msg_to_send = true;
-            access_send.unlock();
         }
 
         FD_CLR(clientSocket_tcp, &master);
