@@ -17,13 +17,10 @@ private:
     int speed;
 
 public:
-<<<<<<< HEAD
     void moveTo(int x, int y);
-=======
     /**
      * Constructor de la clase ghost
      */
->>>>>>> b725276867f9950c9fb06536e2ff8fdf42b3e12f
     ghost()
     {
     }
@@ -33,14 +30,7 @@ public:
     ~ghost() {}
 };
 
-<<<<<<< HEAD
 class grayGhost : public ghost
-=======
-/**
- * Clase hija de la clase ghost
- */
-class ghostNormal : public ghost
->>>>>>> b725276867f9950c9fb06536e2ff8fdf42b3e12f
 {
 };
 
