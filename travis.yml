@@ -1,0 +1,33 @@
+sudo: false
+
+language: cpp
+
+addons:
+  sonarcloud:
+    organization: "simonfv"
+  token:
+    secure: "3363ad81278908902173c2561f7a16c12b0356d2"
+  apt:
+    packages:
+      - gcc-4.8
+      - g++-4.8
+      
+install:
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8 -std=c++11 -DENABLE_REINFORCEMENT_LEARNING" CC="gcc-4.8"; fi
+  
+script:
+  # Prepare the build system
+  - mkdir build
+  - cd build
+  - cmake ..
+  - cd ..
+  # Wraps the compilation with the Build Wrapper to generate configuration (used
+  # later by the SonarQube Scanner) into the "bw-output" folder
+  - build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build/
+  # And finally run the SonarQube analysis - read the "sonar-project.properties"
+  # file to see the specific configuration
+  - sonar-scanner
+            
+cache:
+  directories:
+    - '$HOME/.sonar/cache'

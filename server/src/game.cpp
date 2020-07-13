@@ -14,15 +14,6 @@ game *game::getInstance()
     return game_instance;
 }
 
-void game::moveEnemies()
-{
-    while (true)
-    {
-        //server::getInstance()->sendMsgTcp("Moviendo enemigo...");
-        usleep(1000000);
-    }
-}
-
 void game::checkUpdates()
 {
     while (true)
@@ -34,9 +25,8 @@ void game::checkUpdates()
 
 void game::run_game()
 {
-    thread send, movEnem;
+    thread send;
     send = thread(game::checkUpdates);
-    movEnem = thread(game::moveEnemies);
 
     int result = server::getInstance()->run_server();
     if (result == -1)
@@ -45,7 +35,6 @@ void game::run_game()
     }
 
     send.join();
-    movEnem.join();
 }
 
 string game::process_data(string data)
@@ -65,17 +54,22 @@ string game::process_data(string data)
         string new_map = data.erase(0, 6);
         newBitMap(new_map);
         cout << "Generado el mapa de bits." << endl;
-        for (int j = 0; j < sizeY; j++)
-        {
-            for (int i = 0; i < sizeX - 1; i++)
-            {
-                cout << grid[i][j];
-            }
-            cout << endl;
-        }
+        return "";
+    }
+    else if (key == "pmov")
+    {
+        data.erase(0, 5);
+
         return "";
     }
     return data;
+}
+
+void game::updatePlayer(string data)
+{
+    for (int i = 0; data[i] != ','; i++)
+    {
+    }
 }
 
 void game::newBitMap(string str_bitmap)

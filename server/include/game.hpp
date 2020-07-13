@@ -9,62 +9,50 @@
 using namespace std;
 
 /**
- * @note Mensajes utilizados por los distintos threads y las llaves para accesarlos.
- */
-/**
-  * Variable utilizada para verificar si se envían correctamente los datos
+  * @note Variable utilizada para controlar el acceso de los threads a los mensajes.
   */
 static mutex access_send;
 /**
- * Variable utilizada para verificar si se reciben correctamente los datos
- */
-static mutex access_recv;
-/**
- * Variable utilizada para verificar si el mensaje está en espera para enviarse
+ * @note Variable utilizada para verificar si hay mensajes en la cola.
  */
 static bool is_msg_to_send = false;
 /**
- * Variable utilizada para verificar si se recibieron correctamente los datos vía tcp
- */
-static string msg_recv_tcp = "";
-/**
- * Variable utilizada para verificar si se recibieron correctamente los datos vía udp
- */
-static string msg_recv_udp = "";
-/**
- * Variable utilizada para enviar los datos vía tcp
+ * @note Variable utilizada para enviar los datos por tcp.
  */
 static string msg_send_tcp[20];
 /**
- * Variable utilizada para enviar los datos vía udp
+ * @note Variable utilizada para enviar los datos por udp.
  */
 static string msg_send_udp[80];
 
 /**
- * Clase game creada como molde para procesar el juego
+ * @brief Clase game que contiene la información del juego actual del cliente.
  */
 class game
 {
 private:
     static game *game_instance;
     /**
-     * Variable que contiene el grid del juego
+     * @note Variable que contiene el grid del juego y sus dimensiones.
      */
     int **grid, sizeX, sizeY;
-    unordered_map<int, ghost *> list;
-    player p1;
+    unordered_map<int, ghost *> ghostList;
+    player *p1;
 
 private:
     /**
-     * Constructor de la clase game
+     * Constructor de la clase game.
      */
     game()
     {
+        ghostList[1] = new grayGhost(1);
+        ghostList[2] = new grayGhost(2);
+        ghostList[3] = new grayGhost(3);
         sizeX = 0;
         sizeY = 0;
     }
     /**
-     * Destructor de la clase game
+     * Destructor de la clase game.
      */
     ~game()
     {
@@ -100,6 +88,7 @@ public:
      * @return String con el dato de la petición
      */
     string process_data(string data);
+    void updatePlayer(string data);
     void newBitMap(string str_bitmap);
     void deleteBitMap();
 };

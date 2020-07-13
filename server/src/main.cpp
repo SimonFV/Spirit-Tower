@@ -1,11 +1,11 @@
 
-#include <game.hpp>
+//#include <game.hpp>
 
 using namespace std;
 
 int main()
 {
-    game::getInstance()->run_game();
+    //game::getInstance()->run_game();
 
     return 0;
 }
