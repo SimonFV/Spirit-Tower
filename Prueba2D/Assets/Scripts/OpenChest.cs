@@ -36,16 +36,14 @@ public class OpenChest : MonoBehaviour
     {
 		animator.SetBool("Collition", true);
 
-        if(contador == 3)
+        if (contador == 3)
         {
-            collision.gameObject.GetComponent<PlayerMovement>().setKey(true);
-            contador = 0;
-
-
-            StartCoroutine(waiter());
-
-        
-
+            if (!collision.gameObject.GetComponent<PlayerMovement>().getKey()) 
+            { 
+                collision.gameObject.GetComponent<PlayerMovement>().setKey(true);
+                //contador = 0;
+                StartCoroutine(waiter());
+            }
         }
         else
         {

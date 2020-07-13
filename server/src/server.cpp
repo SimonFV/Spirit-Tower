@@ -144,6 +144,7 @@ int server::run_server()
         FD_SET(clientSocket_udp, &master);
 
         int maxfdp1 = max(clientSocket_tcp, clientSocket_udp) + 1;
+        int socketCount;
 
         /**
          * @note Espera que el cliente envie un dato.
@@ -151,7 +152,7 @@ int server::run_server()
         while (true)
         {
             fd_set copy = master;
-            int socketCount = select(maxfdp1, &copy, nullptr, nullptr, nullptr);
+            socketCount = select(maxfdp1, &copy, nullptr, nullptr, nullptr);
 
             if (socketCount == -1)
             {
@@ -202,10 +203,9 @@ int server::run_server()
             cout << "CLIENT: " << petition << endl;
 
             /**
-             * @note Devuelve el mismo mensaje.
+             * @note Procesa la petición del cliente y devuelve una respuesta si es necesario.
              */
-
-            sendMsgTcp(game::process_data(petition));
+            sendMsgTcp(game::getInstance()->process_data(petition));
         }
 
         FD_CLR(clientSocket_tcp, &master);
@@ -251,25 +251,31 @@ void server::send_msg()
 void server::sendMsgTcp(string msg)
 {
     access_send.lock();
-    int i = 0;
-    while (msg_send_tcp[i] != "" && i < sizeof(msg_send_tcp) / sizeof(msg_send_tcp[0]) - 1)
+    if (msg != "")
     {
-        i++;
+        int i = 0;
+        while (msg_send_tcp[i] != "" && i < sizeof(msg_send_tcp) / sizeof(msg_send_tcp[0]) - 1)
+        {
+            i++;
+        }
+        msg_send_tcp[i] = msg;
+        is_msg_to_send = true;
     }
-    msg_send_tcp[i] = msg;
-    is_msg_to_send = true;
     access_send.unlock();
 }
 
 void server::sendMsgUdp(string msg)
 {
     access_send.lock();
-    int i = 0;
-    while (msg_send_udp[i] != "" && i < sizeof(msg_send_udp) / sizeof(msg_send_udp[0]) - 1)
+    if (msg != "")
     {
-        i++;
+        int i = 0;
+        while (msg_send_udp[i] != "" && i < sizeof(msg_send_udp) / sizeof(msg_send_udp[0]) - 1)
+        {
+            i++;
+        }
+        msg_send_udp[i] = msg;
+        is_msg_to_send = true;
     }
-    msg_send_udp[i] = msg;
-    is_msg_to_send = true;
     access_send.unlock();
 }

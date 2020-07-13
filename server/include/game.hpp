@@ -46,22 +46,46 @@ static string msg_send_udp[80];
 class game
 {
 private:
+    static game *game_instance;
     /**
      * Variable que contiene el grid del juego
      */
-    int grid[200][200];
+    int **grid, sizeX, sizeY;
     unordered_map<int, ghost *> list;
     player p1;
 
-public:
+private:
     /**
      * Constructor de la clase game
      */
-    game() {}
+    game()
+    {
+        sizeX = 0;
+        sizeY = 0;
+    }
     /**
      * Destructor de la clase game
      */
-    ~game() {}
+    ~game()
+    {
+        deleteBitMap();
+    }
+
+public:
+    /**
+     * Método que obtiene la instancia del juego
+     * @return - Instancia del juego
+     */
+    static game *getInstance();
+    /**
+     * Método que evita la reasignación de la instancia del juego
+     * @param other - Juego creado
+     */
+    game(game &other) = delete;
+    /**
+     * Método que evita la reasignación de la instancia del juego
+     */
+    void operator=(const game &) = delete;
 
 public:
     /**
@@ -75,7 +99,9 @@ public:
      * @param data Petición realizada
      * @return String con el dato de la petición
      */
-    static string process_data(string data);
+    string process_data(string data);
+    void newBitMap(string str_bitmap);
+    void deleteBitMap();
 };
 
 #endif

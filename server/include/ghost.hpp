@@ -34,7 +34,7 @@ class grayGhost : public ghost
 {
 };
 
-class reedGhost : public ghost
+class redGhost : public ghost
 {
 };
 
