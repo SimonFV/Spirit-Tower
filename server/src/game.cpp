@@ -51,15 +51,15 @@ string game::process_data(string data)
         {
             deleteBitMap();
         }
-        string new_map = data.erase(0, 6);
-        newBitMap(new_map);
+        data.erase(0, 6);
+        newBitMap(data);
         cout << "Generado el mapa de bits." << endl;
         return "";
     }
-    else if (key == "pmov")
+    else if (key == "player")
     {
-        data.erase(0, 5);
-
+        data.erase(0, 7);
+        updatePlayer(data);
         return "";
     }
     return data;
@@ -67,8 +67,51 @@ string game::process_data(string data)
 
 void game::updatePlayer(string data)
 {
-    for (int i = 0; data[i] != ','; i++)
+    string key = "";
+
+    int i = 0;
+    while (data[i] != ',')
     {
+        key += data[i];
+        i++;
+    }
+    i++;
+    if (key == "pos")
+    {
+        string posX = "";
+        string posY = "";
+        while (data[i] != ',')
+        {
+            posX += data[i];
+            i++;
+        }
+        i++;
+        while (i != '\n')
+        {
+            posY += data[i];
+            i++;
+        }
+        p1->moveTo(stoi(posX), stoi(posY));
+        if (p1->getPosX() != p1->getLastPosX() || p1->getPosY() != p1->getLastPosY())
+        {
+            p1->setLastPos(p1->getPosX(), p1->getPosY());
+            cout << "Posición del Jugador: " << p1->getPosX() << "," << p1->getPosY() << endl;
+        }
+    }
+    else if (key == "life")
+    {
+        string life = "";
+        while (data[i] != '\n')
+        {
+            life += data[i];
+            i++;
+        }
+        p1->setLife(stoi(life));
+        cout << "Vida del Jugador: " << life << endl;
+        if (p1->getLife() == 0)
+        {
+            cout << "Jugador Muerto: reiniciando nivel." << endl;
+        }
     }
 }
 

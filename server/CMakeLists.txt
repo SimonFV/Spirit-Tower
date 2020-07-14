@@ -6,9 +6,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED 14)
 
 set(src 
     src/main.cpp
-    #src/server.cpp
-    #src/game.cpp
-    #src/enemies.cpp
+    src/server.cpp
+    src/game.cpp
+    src/enemies.cpp
     #src/genetic_algorithm.cpp
     #src/bresenham_algorithm.cpp
     #src/backtracking.cpp
@@ -16,10 +16,10 @@ set(src
 )
 
 set(head
-    #include/server.hpp
-    #include/game.hpp
-    #include/player.hpp
-    #include/ghost.hpp
+    include/server.hpp
+    include/game.hpp
+    include/player.hpp
+    include/ghost.hpp
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/include/)

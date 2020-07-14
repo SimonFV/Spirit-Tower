@@ -42,6 +42,15 @@ public:
         position[0] = x;
         position[1] = y;
     }
+    void setLastPos(int x, int y)
+    {
+        lastPosition[0] = x;
+        lastPosition[1] = y;
+    }
+    void setLife(int l)
+    {
+        life = l;
+    }
 
 public:
     /**

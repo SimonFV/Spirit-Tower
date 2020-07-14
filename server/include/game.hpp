@@ -45,6 +45,7 @@ private:
      */
     game()
     {
+        p1 = new player();
         ghostList[1] = new grayGhost(1);
         ghostList[2] = new grayGhost(2);
         ghostList[3] = new grayGhost(3);
@@ -57,6 +58,7 @@ private:
     ~game()
     {
         deleteBitMap();
+        delete (p1);
     }
 
 public:

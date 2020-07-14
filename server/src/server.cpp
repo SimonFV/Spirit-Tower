@@ -93,12 +93,6 @@ int server::run_server()
         char buf[4096];
 
         /**
-         * @note Envia un mensaje inicial al cliente.
-         */
-        string message = "TCP conectado";
-        send(clientSocket_tcp, message.c_str(), message.size() + 1, 0);
-
-        /**
          * @note Cierra el socket para listening.
          */
         close(listen_socket);
@@ -200,7 +194,6 @@ int server::run_server()
                  */
                 petition = string(buf_udp, 0, bytesReceived);
             }
-            cout << "CLIENT: " << petition << endl;
 
             /**
              * @note Procesa la petición del cliente y devuelve una respuesta si es necesario.
@@ -229,7 +222,6 @@ void server::send_msg()
                         i < sizeof(msg_send_udp) / sizeof(msg_send_udp[0]) - 1;
              i++)
         {
-            cout << "SEND: " << msg_send_udp[i] << endl;
             sendto(clientSocket_udp, msg_send_udp[i].c_str(), msg_send_udp[i].size() + 1,
                    0, (sockaddr *)&udpGameServer, sizeof(udpGameServer));
             msg_send_udp[i] = "";
@@ -239,7 +231,6 @@ void server::send_msg()
                         i < sizeof(msg_send_tcp) / sizeof(msg_send_tcp[0]) - 1;
              i++)
         {
-            cout << "SEND: " << msg_send_tcp[i] << endl;
             send(clientSocket_tcp, msg_send_tcp[i].c_str(), msg_send_tcp[i].size() + 1, 0);
             msg_send_tcp[i] = "";
         }
