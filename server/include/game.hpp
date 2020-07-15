@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <ghost.hpp>
 #include <player.hpp>
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/basic_file_sink.h"
 
 using namespace std;
 
@@ -36,6 +38,7 @@ private:
      * @note Variable que contiene el grid del juego y sus dimensiones.
      */
     int **grid, sizeX, sizeY;
+    string str_grid;
     unordered_map<int, ghost *> ghostList;
     player *p1;
 
@@ -45,6 +48,7 @@ private:
      */
     game()
     {
+        str_grid = "";
         p1 = new player();
         ghostList[1] = new grayGhost(1);
         ghostList[2] = new grayGhost(2);
@@ -83,7 +87,7 @@ public:
      */
     static void checkUpdates();
     static void moveEnemies();
-    void run_game();
+    void run_game() const;
     /**
      * Método que procesa el dato ingresado para validar la petición realizada
      * @param data Petición realizada

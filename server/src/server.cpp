@@ -1,5 +1,4 @@
 
-#include <server.hpp>
 #include <game.hpp>
 
 using namespace std;
@@ -31,11 +30,8 @@ int server::run_server()
 {
     while (true)
     {
-
         /////////////////SELECT///////////////////////
-        fd_set master;
         FD_ZERO(&master);
-        int bytesReceived; //Bytes recibidos del cliente.
 
         /////////////////CONEXION TCP/////////////////////
 
@@ -45,7 +41,7 @@ int server::run_server()
         int listen_socket = socket(AF_INET, SOCK_STREAM, 0);
         if (listen_socket == -1)
         {
-            cerr << "No se pudo crear el socket listen tcp, cerrando..." << endl;
+            spdlog::error("No se pudo crear el socket listen tcp, cerrando...");
             return -1;
         }
 
@@ -67,7 +63,7 @@ int server::run_server()
         /**
          * @note Espera una conexion TCP.
          */
-        cout << "Esperando cliente TCP..." << endl;
+        spdlog::info("Esperando cliente...");
         sockaddr_in client_tcp;
         socklen_t clientSize = sizeof(client_tcp);
 
@@ -82,15 +78,13 @@ int server::run_server()
         if (getnameinfo((sockaddr *)&client_tcp, sizeof(client_tcp),
                         host, NI_MAXHOST, service, NI_MAXSERV, 0) == 0)
         {
-            cout << host << "(TCP) conectado en el puerto " << service << endl;
+            spdlog::info("{}[TCP] conectado en el puerto {}.", host, service);
         }
         else
         {
             inet_ntop(AF_INET, &client_tcp.sin_addr, host, NI_MAXHOST);
-            cout << host << "(TCP) conectado en el puerto " << ntohs(client_tcp.sin_port) << endl;
+            spdlog::info("{}[TCP] conectado en el puerto {}.", host, ntohs(client_tcp.sin_port));
         }
-
-        char buf[4096];
 
         /**
          * @note Cierra el socket para listening.
@@ -105,7 +99,7 @@ int server::run_server()
         clientSocket_udp = socket(AF_INET, SOCK_DGRAM, 0);
         if (clientSocket_udp == -1)
         {
-            cerr << "No se pudo crear el socket udp, cerrando..." << endl;
+            spdlog::error("No se pudo crear el socket udp, cerrando...");
             return -1;
         }
 
@@ -119,9 +113,7 @@ int server::run_server()
 
         bind(clientSocket_udp, (sockaddr *)&udpHint, sizeof(udpHint));
 
-        sockaddr_in client_udp;
-        socklen_t clientSize_udp = sizeof(client_udp);
-        char buf_udp[1024];
+        clientSize_udp = sizeof(client_udp);
 
         ////////////////DIRECCION SERVIDOR UDP (JUEGO)//////////
         /**
@@ -137,68 +129,15 @@ int server::run_server()
         FD_SET(clientSocket_tcp, &master);
         FD_SET(clientSocket_udp, &master);
 
-        int maxfdp1 = max(clientSocket_tcp, clientSocket_udp) + 1;
-        int socketCount;
-
         /**
          * @note Espera que el cliente envie un dato.
          */
         while (true)
         {
-            fd_set copy = master;
-            socketCount = select(maxfdp1, &copy, nullptr, nullptr, nullptr);
-
-            if (socketCount == -1)
+            if (receive_msg() == -1)
             {
-                cout << "Error en el socket." << endl;
                 break;
             }
-            if (socketCount == 0)
-            {
-                continue;
-            }
-
-            /**
-             * @note Si el mensaje es desde TCP.
-             */
-            if (FD_ISSET(clientSocket_tcp, &copy))
-            {
-                memset(buf, 0, 4096);
-                bytesReceived = recv(clientSocket_tcp, buf, 4096, 0);
-                if (bytesReceived == -1)
-                {
-                    cerr << "Error al recibir el mensaje." << endl;
-                    break;
-                }
-                if (bytesReceived == 0)
-                {
-                    cout << "Cliente desconectado." << endl;
-                    break;
-                }
-                /**
-                 * @note Peticion del cliente.
-                 */
-                petition = string(buf, 0, bytesReceived);
-            }
-
-            /**
-             * @note Si el mensaje es desde UDP.
-             */
-            if (FD_ISSET(clientSocket_udp, &copy))
-            {
-                memset(buf_udp, 0, 1024);
-                bytesReceived = recvfrom(clientSocket_udp, buf_udp, 1024, 0,
-                                         (sockaddr *)&client_udp, &clientSize_udp);
-                /**
-                 * @note Peticion del cliente.
-                 */
-                petition = string(buf_udp, 0, bytesReceived);
-            }
-
-            /**
-             * @note Procesa la petición del cliente y devuelve una respuesta si es necesario.
-             */
-            sendMsgTcp(game::getInstance()->process_data(petition));
         }
 
         FD_CLR(clientSocket_tcp, &master);
@@ -210,12 +149,67 @@ int server::run_server()
         close(clientSocket_tcp);
         close(clientSocket_udp);
     }
-    return 0;
+}
+
+int server::receive_msg()
+{
+    maxfdp1 = max(clientSocket_tcp, clientSocket_udp) + 1;
+
+    fd_set copy = master;
+    socketCount = select(maxfdp1, &copy, nullptr, nullptr, nullptr);
+
+    if (socketCount == -1)
+    {
+        spdlog::error("Error de conexión. Reiniciando...");
+        return -1;
+    }
+
+    /**
+     * @note Si el mensaje es desde TCP.
+     */
+    if (FD_ISSET(clientSocket_tcp, &copy))
+    {
+        memset(buf, 0, 4096);
+        bytesReceived = recv(clientSocket_tcp, buf, 4096, 0);
+        if (bytesReceived == -1)
+        {
+            spdlog::error("Error al recibir el mensaje.");
+            return -1;
+        }
+        if (bytesReceived == 0)
+        {
+            spdlog::info("Cliente desconectado.");
+            return -1;
+        }
+        /**
+                 * @note Peticion del cliente.
+                 */
+        petition = string(buf, 0, bytesReceived);
+    }
+
+    /**
+             * @note Si el mensaje es desde UDP.
+             */
+    if (FD_ISSET(clientSocket_udp, &copy))
+    {
+        memset(buf_udp, 0, 1024);
+        bytesReceived = recvfrom(clientSocket_udp, buf_udp, 1024, 0,
+                                 (sockaddr *)&client_udp, &clientSize_udp);
+        /**
+         * @note Peticion del cliente.
+         */
+        petition = string(buf_udp, 0, bytesReceived);
+    }
+
+    /**
+     * @note Procesa la petición del cliente y devuelve una respuesta si es necesario.
+     */
+    sendMsgTcp(game::getInstance()->process_data(petition));
 }
 
 void server::send_msg()
 {
-    access_send.lock();
+    lock_guard<mutex> lock(access_send);
     if (is_msg_to_send)
     {
         for (int i = 0; msg_send_udp[i] != "" &&
@@ -236,12 +230,11 @@ void server::send_msg()
         }
     }
     is_msg_to_send = false;
-    access_send.unlock();
 }
 
 void server::sendMsgTcp(string msg)
 {
-    access_send.lock();
+    lock_guard<mutex> lock(access_send);
     if (msg != "")
     {
         int i = 0;
@@ -252,12 +245,11 @@ void server::sendMsgTcp(string msg)
         msg_send_tcp[i] = msg;
         is_msg_to_send = true;
     }
-    access_send.unlock();
 }
 
 void server::sendMsgUdp(string msg)
 {
-    access_send.lock();
+    lock_guard<mutex> lock(access_send);
     if (msg != "")
     {
         int i = 0;
@@ -268,5 +260,4 @@ void server::sendMsgUdp(string msg)
         msg_send_udp[i] = msg;
         is_msg_to_send = true;
     }
-    access_send.unlock();
 }

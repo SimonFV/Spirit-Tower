@@ -14,16 +14,16 @@ game *game::getInstance()
     return game_instance;
 }
 
-void game::checkUpdates()
+[[noreturn]] void game::checkUpdates()
 {
     while (true)
     {
         server::getInstance()->send_msg();
-        usleep(1000);
+        nanosleep((const struct timespec[]){{0, 1000000L}}, NULL);
     }
 }
 
-void game::run_game()
+void game::run_game() const
 {
     thread send;
     send = thread(game::checkUpdates);
@@ -31,7 +31,7 @@ void game::run_game()
     int result = server::getInstance()->run_server();
     if (result == -1)
     {
-        cout << "Error en el socket." << endl;
+        spdlog::error("Error en el servidor.");
     }
 
     send.join();
@@ -53,7 +53,7 @@ string game::process_data(string data)
         }
         data.erase(0, 6);
         newBitMap(data);
-        cout << "Generado el mapa de bits." << endl;
+        spdlog::info(str_grid);
         return "";
     }
     else if (key == "player")
@@ -62,6 +62,7 @@ string game::process_data(string data)
         updatePlayer(data);
         return "";
     }
+    spdlog::info("Client: {}", data);
     return data;
 }
 
@@ -86,7 +87,7 @@ void game::updatePlayer(string data)
             i++;
         }
         i++;
-        while (i != '\n')
+        while (data[i] != '\n')
         {
             posY += data[i];
             i++;
@@ -95,7 +96,7 @@ void game::updatePlayer(string data)
         if (p1->getPosX() != p1->getLastPosX() || p1->getPosY() != p1->getLastPosY())
         {
             p1->setLastPos(p1->getPosX(), p1->getPosY());
-            cout << "Posición del Jugador: " << p1->getPosX() << "," << p1->getPosY() << endl;
+            spdlog::info("Posición del Jugador: [ x = {}, y = {} ]", p1->getPosX(), p1->getPosY());
         }
     }
     else if (key == "life")
@@ -107,10 +108,10 @@ void game::updatePlayer(string data)
             i++;
         }
         p1->setLife(stoi(life));
-        cout << "Vida del Jugador: " << life << endl;
+        spdlog::info("Vida del Jugador: {}", life);
         if (p1->getLife() == 0)
         {
-            cout << "Jugador Muerto: reiniciando nivel." << endl;
+            spdlog::info("Jugador Muerto: reiniciando nivel.");
         }
     }
 }
@@ -140,6 +141,19 @@ void game::newBitMap(string str_bitmap)
         {
             grid[i - 1][j] = str_bitmap[i + j] - '0';
         }
+    }
+
+    /**
+     * @note genera un string con el mapa de bits para representarlo en consola.
+     */
+    str_grid = "Generado el mapa de bits del nivel:\n";
+    for (int j = 0; j < sizeY; j++)
+    {
+        for (int i = 1; i < sizeX; i++)
+        {
+            str_grid += to_string(grid[i - 1][j]) + " ";
+        }
+        str_grid += "\n";
     }
 }
 

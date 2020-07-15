@@ -44,6 +44,18 @@ private:
     string petition;
 
     /**
+     * @note Bytes recibidos del cliente.
+     */
+    int bytesReceived;
+    fd_set master;
+    char buf[4096];
+    char buf_udp[1024];
+    int maxfdp1;
+    int socketCount;
+    sockaddr_in client_udp;
+    socklen_t clientSize_udp;
+
+    /**
      * Constructor de la clase server
      */
     server() {}
@@ -51,6 +63,12 @@ private:
      * Destructor de la clase server
      */
     ~server() {}
+
+    /**
+     * @brief Método que recive mensajes.
+     * Se mantiene en espera hasta que recibe un mensaje por alguno de los sockets.
+     */
+    int receive_msg();
 
 public:
     /**

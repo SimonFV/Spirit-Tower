@@ -25,8 +25,11 @@ set(head
 include_directories(${PROJECT_SOURCE_DIR}/include/)
 
 
+add_subdirectory(external/spdlog)
+
 add_executable(run ${src} ${head})
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
-target_link_libraries(run Threads::Threads)
+target_link_libraries(run spdlog
+                        Threads::Threads)
