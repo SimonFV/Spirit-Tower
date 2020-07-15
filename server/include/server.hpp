@@ -46,7 +46,7 @@ private:
     /**
      * @note Bytes recibidos del cliente.
      */
-    int bytesReceived;
+    long int bytesReceived;
     fd_set master;
     char buf[4096];
     char buf_udp[1024];
@@ -104,8 +104,8 @@ public:
      * así, los envía en orden de lista.
      */
     void send_msg();
-    void sendMsgTcp(string msg);
-    void sendMsgUdp(string msg);
+    void sendMsgTcp(string msg) const;
+    void sendMsgUdp(string msg) const;
 };
 
 #endif

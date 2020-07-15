@@ -232,7 +232,7 @@ void server::send_msg()
     is_msg_to_send = false;
 }
 
-void server::sendMsgTcp(string msg)
+void server::sendMsgTcp(string msg) const
 {
     lock_guard<mutex> lock(access_send);
     if (msg != "")
@@ -247,7 +247,7 @@ void server::sendMsgTcp(string msg)
     }
 }
 
-void server::sendMsgUdp(string msg)
+void server::sendMsgUdp(string msg) const
 {
     lock_guard<mutex> lock(access_send);
     if (msg != "")
