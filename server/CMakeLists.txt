@@ -24,12 +24,23 @@ set(head
 
 include_directories(${PROJECT_SOURCE_DIR}/include/)
 
+#Test
+enable_testing()
+add_subdirectory(googletest)
 
+#Logging
 add_subdirectory(external/spdlog)
+
+add_library(server_library ${head} ${src})
 
 add_executable(run ${src} ${head})
 
+#Threads
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
-target_link_libraries(run spdlog
-                        Threads::Threads)
+
+target_link_libraries(run spdlog Threads::Threads)
+target_link_libraries(server_library spdlog)
+
+#Test
+add_subdirectory(test)

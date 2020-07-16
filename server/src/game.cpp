@@ -124,9 +124,12 @@ void game::newBitMap(string str_bitmap)
         sizeX++;
     }
     sizeY = 0;
-    while (sizeX + sizeY < str_bitmap.length())
+    for (int i = 0; i < str_bitmap.length(); i++)
     {
-        sizeY++;
+        if (str_bitmap[i] == '\n')
+        {
+            sizeY++;
+        }
     }
 
     grid = new int *[sizeX - 1];
@@ -135,11 +138,11 @@ void game::newBitMap(string str_bitmap)
         grid[i] = new int[sizeY];
     }
 
-    for (int j = 0; j < sizeY; j++)
+    for (int j = 1; j <= sizeY; j++)
     {
         for (int i = 1; i < sizeX; i++)
         {
-            grid[i - 1][j] = str_bitmap[i + j] - '0';
+            grid[i - 1][j - 1] = str_bitmap[i + ((j - 1) * sizeX)] - '0';
         }
     }
 
@@ -149,9 +152,9 @@ void game::newBitMap(string str_bitmap)
     str_grid = "Generado el mapa de bits del nivel:\n";
     for (int j = 0; j < sizeY; j++)
     {
-        for (int i = 1; i < sizeX; i++)
+        for (int i = 0; i < sizeX - 1; i++)
         {
-            str_grid += to_string(grid[i - 1][j]) + " ";
+            str_grid += to_string(grid[i][j]) + " ";
         }
         str_grid += "\n";
     }

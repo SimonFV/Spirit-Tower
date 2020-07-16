@@ -18,7 +18,10 @@ public class Patrulla : MonoBehaviour
 
     //patrulla
 
-    public bool follow = true  ;
+    [SerializeField]
+    BoxCollider2D boxCollider;
+
+    public bool follow = true;
 
     private Rigidbody2D rb;
 
@@ -38,7 +41,6 @@ public class Patrulla : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-
         if (visionAngle <= 0f) return;
 
         float halfVisionAngle = visionAngle * 0.5f;
@@ -52,7 +54,6 @@ public class Patrulla : MonoBehaviour
         Gizmos.DrawLine(head.position, (Vector2)head.position + p2);
 
         Gizmos.DrawRay(head.position, head.right * 4f);
-
     }
 
     private Vector2 PointForAngle(float angle, float distance)
@@ -65,14 +66,12 @@ public class Patrulla : MonoBehaviour
             * distance;
     }
 
-
     // Start is called before the first frame update
     void Start()
     {
 
         rb = GetComponent<Rigidbody2D>();
         transform.position = waypoints[waypointIndex].transform.position;
-
 
     }
 
@@ -117,9 +116,6 @@ public class Patrulla : MonoBehaviour
             Move();
         }
 
-
-
-
         detected = false;
 
         Vector2 playerVector = player.position - head.position;
@@ -129,6 +125,10 @@ public class Patrulla : MonoBehaviour
             if(playerVector.magnitude < visionDistance)
             {
                 detected = true;
+                if (!this.GetComponent<SpriteRenderer>().enabled)
+                {
+                    boxCollider.isTrigger = true;
+                }
             }
 
         }
@@ -136,4 +136,50 @@ public class Patrulla : MonoBehaviour
         
     }
 
+    IEnumerator waiter(Collision2D collision, PlayerMovement player)
+    {
+        if (collision.gameObject.GetComponent<PlayerMovement>().getLife() == 1)
+        {
+            boxCollider.isTrigger = true;
+            collision.gameObject.GetComponent<PlayerMovement>().setLife(player.getLife() - 1);
+
+            yield return new WaitForSeconds(1);
+
+            boxCollider.isTrigger = false;
+            collision.gameObject.GetComponent<PlayerMovement>().restartPlayerPos();
+            collision.gameObject.GetComponent<PlayerMovement>().setLife(3);
+        }
+        else
+        {
+            boxCollider.isTrigger = true;
+            collision.gameObject.GetComponent<PlayerMovement>().setLife(player.getLife() - 1);
+
+            yield return new WaitForSeconds(3);
+            boxCollider.isTrigger = false;
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            if (shield.playerUsingShield)
+            {
+            }
+            if (Weapon.playerUsingBlade) 
+            {
+                this.GetComponent<SpriteRenderer>().enabled = false;
+                this.follow = false;
+                visionAngle = 0f;
+                visionDistance = 0f;
+                boxCollider.isTrigger = true;
+            }
+            if (!shield.playerUsingShield && !Weapon.playerUsingBlade)
+            {
+                PlayerMovement player = collision.gameObject.GetComponent<PlayerMovement>();
+                StartCoroutine(waiter(collision, player));
+            }
+
+        }
+    }
 }

@@ -48,11 +48,15 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     public static bool usingBlade = false;
 
+    [SerializeField]
+    public static bool usingShield = false;
+
     public static Vector3 bladePosLeft;
     public static Vector3 bladePosRight;
-
     public static Vector2 bladeLeftOrRight;
-
+    public static Vector3 shieldPosLeft;
+    public static Vector3 shieldPosRight;
+    public static Vector2 shieldLeftOrRight;
 
     [SerializeField]
     private Tilemap tilemap;
@@ -128,13 +132,41 @@ public class PlayerMovement : MonoBehaviour
         //SE EJECUTA LA ACCIÓN COMO RESULTADO DE PRESIONAR LA TECLA F
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if (usingBlade)
+            if (!usingBlade) 
             {
-                usingBlade = false;
+                if (usingShield)
+                {
+                    usingShield = false;
+                    usingBlade = true;
+                }
+                else
+                {
+                    usingBlade = true;
+                }
             }
             else
             {
-                usingBlade = true;
+                usingBlade = false;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            if (!usingShield) 
+            {
+                if (usingBlade)
+                {
+                    usingBlade = false;
+                    usingShield = true;
+                }
+                else
+                {
+                    usingShield = true;
+                }
+            }
+            else
+            {
+                usingShield = false;
             }
         }
 
@@ -143,7 +175,6 @@ public class PlayerMovement : MonoBehaviour
         if (rb.velocity.x > 0)
         {
             transform.localScale = new Vector2(1, transform.localScale.y);
-
         }
         else if (rb.velocity.x < 0)
         {
@@ -151,9 +182,14 @@ public class PlayerMovement : MonoBehaviour
         }
 
         camara.transform.position = new Vector3(transform.position.x, transform.position.y, camara.transform.position.z);
+        
         bladePosRight = new Vector3(transform.position.x + 0.65f, transform.position.y, 0);
         bladePosLeft = new Vector3(transform.position.x - 0.65f, transform.position.y, 0);
         bladeLeftOrRight = transform.localScale;
+        
+        shieldPosRight = new Vector3(transform.position.x + 1f, transform.position.y, 0);
+        shieldPosLeft = new Vector3(transform.position.x - 1f, transform.position.y, 0);
+        shieldLeftOrRight = transform.localScale;
 
         if (light != null)
         {

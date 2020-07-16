@@ -97,6 +97,9 @@ public:
     void updatePlayer(string data);
     void newBitMap(string str_bitmap);
     void deleteBitMap();
+
+public:
+    string getStrGrid() { return str_grid; }
 };
 
 #endif
