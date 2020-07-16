@@ -6,7 +6,7 @@ addons:
   sonarcloud:
     organization: "simonfv"
   token:
-    secure: "3363ad81278908902173c2561f7a16c12b0356d2"
+    secure: "OCFnsndonweK+nrR9L3mrl1Iyxw8DKxpEgQyHc8FyQEC6m+y9aVhn3wNUqif8lsT3XxqeZV4Pkfn2HGJSX4rlSz/a4tRcmhRjR7SJccJF012gFJY/WjLWQW28bEuyYgzFpA4IMhMmHsGI3frdBXc6sZbsKIpMXZYkzSkuxE3lnE9W8bupaQGnhfcOAmFDelkGjRJB/s2CzDz/5RAX4SkSCWZ7SskNuB9VrpZdZqQCh3d452d+o/uzdARGQJBYrfloKe8d8wTF4vQToxfr/jKapLZ5rDF6TQ1NgkJlhr/E2uaWfl0HQN3bSHo03OjFZGNEPPf4gn24pr/Psq5VEZMObe6WhhByS9XyzyWjQ0c2ewilgxyaQiGpqgDaAe3A2gFgO1t3T1iYo1CXDf6eTz9IXYS5R10s3k1vHVfXQnW2JoGivbt7Nu/ShOHO0IDHiDk9k7jr+H5ZTaVAVdmg1aYxbrcILM20c0hTnlzWc8sc9+8qDEkhRQSOvUpHIIYn0JE8ZmGwxifQbhQxi7UkKFblMEawUkX2pYXJFymeAVmD7nmscrYOTj00YsgNSqNzYp5Otv66AMKkW+hzx2zzaHYJqETux+/ya8YPJlzxjAKiKayS3KVdvpeVngUWcBXDnL5H6UmgjkxencU01ItCnVAyHAkBg5pR76g0f9xVMmJCrY="
   apt:
     packages:
       - gcc-4.8
