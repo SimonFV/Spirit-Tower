@@ -35,8 +35,8 @@ script:
   # And finally run the SonarQube analysis - read the "sonar-project.properties"
   # file to see the specific configuration
   - sonar-scanner
-  - cd build
-  - ctest
+  - cd build/server/test
+  - ./server_test
             
 cache:
   directories:
