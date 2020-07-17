@@ -37,6 +37,12 @@ script:
   - cd build/server/
   - ctest
   - cd .. && cd ..
+  - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; 
+    then
+      make gcov
+      make lcov
+      bash <(curl -s https://codecov.io/bash) -X gcov || echo "Codecov did not collect coverage reports"
+    fi
   - sonar-scanner
             
 cache:

@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.8)
 project(st_server)
 
 set(CMAKE_CXX_STANDARD_REQUIRED 14)
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/external/CMake-codecov/cmake" ${CMAKE_MODULE_PATH})
 
 set(src 
     src/main.cpp
@@ -44,3 +45,4 @@ target_link_libraries(server_library spdlog)
 
 #Test
 add_subdirectory(test)
+

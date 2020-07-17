@@ -1,0 +1,3 @@
+[submodule "server/external/CMake-codecov"]
+	path = server/external/CMake-codecov
+	url = git://github.com/RWTH-HPC/CMake-codecov.git
