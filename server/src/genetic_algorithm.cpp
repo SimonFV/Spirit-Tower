@@ -1,26 +1,37 @@
 #include <iostream>
+#include <random>
 #include <vector>
 #include <algorithm>
+#include <algorithms.hpp>
 
 using namespace std;
 
-int modelo [] = {3,3,3,3,3,3};
-int largo = 6;
-int num = 4;
-int pressure = 3;
-float mutation_chance = 0.2;
-int max_valor = 3; // 1,2,3
-int valor_modelo = 3;
-int max_generaciones = 100;
+const int largo = 3;
+const int num = 3;
+const int pressure = 2;
+const double mutation_chance = 0.2;
+
+// Mostrar la poblacion
+void algorithms::mostrarPoblacion(vector<vector<int>> population) const{
+    int a = int(population.size());
+    int b = int(population[0].size());
+    for (unsigned int i = 0; i < a; i++) { 
+        for (unsigned int j = 0; j < b; j++)
+            spdlog::info(population[i][j]);
+        spdlog::info(" ");
+    }
+}
 
 // Crea la poblacion.
-vector<vector<int>> crearPoblacion(int num, int largo){
-    srand(time(NULL));
+vector<vector<int>> algorithms::crearPoblacion() const{
+    std::random_device dev;
+    std::mt19937 rng(dev());
     vector<vector<int>> Poblacion;
     for(int i=0;i<num;i++){
         vector<int> individuo;
         for(int j=0;j<largo;j++){
-            individuo.push_back(rand() % max_valor + 1); // Valores del 1 al 3
+            std::uniform_int_distribution<std::mt19937::result_type> dist1(1,3);
+            individuo.push_back(int(dist1(rng))); // Valores del 1 al 3
         }        
         Poblacion.push_back(individuo);
     }
@@ -28,16 +39,21 @@ vector<vector<int>> crearPoblacion(int num, int largo){
 }
 
 // Funcion Fitness
-vector<vector<int>> fitness(vector<vector<int>> population){
+vector<vector<int>> algorithms::fitness(vector<vector<int>> population, int valor_modelo) const{
+    std::random_device dev;
+    std::mt19937 rng(dev());
     vector<vector<int>> puntuados;
-    for (unsigned int i = 0; i < population.size(); i++) { 
+    int a = int(population.size());
+    int b = int(population[0].size());
+    for (unsigned int i = 0; i < a; i++) { 
         vector<int> individuo;
+        int c = int(individuo.size());
         int contador = 0;
-        for (unsigned int j = 0; j < population[i].size(); j++){
+        for (unsigned int j = 0; j < b; j++){
             individuo.push_back(population[i][j]);
         }
         // Fitness -> Contar la cantidad de numeros repetidos valor_modelo que hay
-        for (unsigned int i = 0; i < individuo.size(); i++){
+        for (unsigned int i = 0; i < c; i++){
             if(individuo[i]==valor_modelo){
                 contador += 1;
             }
@@ -51,57 +67,46 @@ vector<vector<int>> fitness(vector<vector<int>> population){
 }
 
 // Funcion seleccion y reproduccion
-vector<vector<int>> selection_and_reproduction(vector<vector<int>> population){
-
+vector<vector<int>> algorithms::selection_and_reproduction(vector<vector<int>> population, int valor_modelo) const{
+    std::random_device dev;
+    std::mt19937 rng(dev());
     // Calcula el fitness
-    population = fitness(population);
+    population = fitness(population, valor_modelo);
 
     // Ordena el vector
     sort(population.begin(), population.end());
 
-    // Eliminar el primer valor de cada vector
-    vector<vector<int>> puntuados;
-    for (unsigned int i = 0; i < population.size(); i++) { 
-        vector<int> individuo;
-        for (unsigned int j = 1; j < population[i].size(); j++){
-            individuo.push_back(population[i][j]);
-        }
-        puntuados.push_back(individuo);
-    }
+    population = eliminar_valores_vector(population);
 
-    population = puntuados;
-
-    // Esto selecciona los 'n' individuos del final, donde n viene dado por 'pressure'
-    unsigned int individuos_quitar = population.size() - pressure;
+    // --- Quitar individuos
     vector<vector<int>> selected;
-    for (unsigned int i = 0; i < population.size(); i++) {
-        vector<int> individuo2;
-        if (i >= individuos_quitar){
-            for (unsigned int j = 0; j < population[i].size(); j++){
-                individuo2.push_back(population[i][j]);
-            }
-            selected.push_back(individuo2);
-        }   
-    }
+    selected = quitar_individuos(population);
 
     // Se mezcla el material genetico para crear nuevos individuos
-    for (unsigned int ii = 0; ii < population.size()-pressure; ii++){
-        unsigned int punto = (rand() % largo + 1) - 1; //Se elige un punto para hacer el intercambio
+    int a = int(population.size()-pressure);
+    for (unsigned int ii = 0; ii < a; ii++){
+        std::uniform_int_distribution<std::mt19937::result_type> dist1(0,(largo-1)); 
+        unsigned int punto = int(dist1(rng)); //Se elige un punto para hacer el intercambio
 
         // Se eligen dos padres
-        int size_selected = selected.size();
-        unsigned int padre1 = (rand() % size_selected + 1) - 1;
-        unsigned int padre2 = (rand() % size_selected + 1) - 1;
+        int size_selected = int(selected.size());
+        std::uniform_int_distribution<std::mt19937::result_type> dist2(0,(size_selected-1));
+        unsigned int padre1 = int(dist2(rng));
+        std::uniform_int_distribution<std::mt19937::result_type> dist3(0,(size_selected-1));
+        unsigned int padre2 = int(dist3(rng));
         if (padre1==padre2){
             while (padre1==padre2){
-                padre2 = (rand() % size_selected + 1) - 1;
+                std::uniform_int_distribution<std::mt19937::result_type> dist4(0,(size_selected-1));
+                padre2 = int(dist4(rng));
             }
         }
         vector<vector<int>> padre;
-        for (unsigned int i = 0; i < selected.size(); i++) {
+        int b = int(selected.size());
+        int c = int(selected[0].size());
+        for (unsigned int i = 0; i < b; i++) {
             vector<int> individuo3;
             if (i==padre1 || i==padre2){
-                for (unsigned int j = 0; j < selected[i].size(); j++){
+                for (unsigned int j = 0; j < c; j++){
                         individuo3.push_back(selected[i][j]);
                 }
                 padre.push_back(individuo3);
@@ -114,8 +119,8 @@ vector<vector<int>> selection_and_reproduction(vector<vector<int>> population){
         }
             
         //Se mezcla el material genetico del padre 1 en cada nuevo individuo
-        unsigned indice_mayor = population[0].size() - 1;
-        for (unsigned int j=indice_mayor; j>=((indice_mayor - punto)); j--) {
+        unsigned indice_mayor = int(population[0].size() - 1);
+        for (unsigned int j=indice_mayor; j>=(indice_mayor - punto); j--) {
             population[ii][j] = padre[1][j];
             if (j==0){
                 break;
@@ -127,22 +132,29 @@ vector<vector<int>> selection_and_reproduction(vector<vector<int>> population){
 }
 
 // Funcion mutacion
-vector<vector<int>> mutation(vector<vector<int>> population){  
-
-    for (unsigned int ii = 0; ii < population.size()-pressure; ii++){
+vector<vector<int>> algorithms::mutation(vector<vector<int>> population, int max_valor) const{  
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    int a = int(population.size()-pressure);
+    for (unsigned int ii = 0; ii < a; ii++){
         //Cada individuo de la poblacion (menos los padres) tienen una probabilidad de mutar
-            float aleatorio = float((rand() % 9999)) / float(10000);
+            std::uniform_int_distribution<std::mt19937::result_type> dist1(1,9999);
+            double aleatorio = double(dist1(rng)) / double(10000);
             if (aleatorio <= mutation_chance){
                 
                 //  Se elige un punto al azar
-                unsigned int punto = (rand() % largo + 1) - 1;
+                std::uniform_int_distribution<std::mt19937::result_type> dist2(0,(largo-1)); 
+                unsigned int punto = int(dist2(rng));
 
                 // y un nuevo valor para este punto
-                int nuevo_valor = (rand() % max_valor + 1);
+                std::uniform_int_distribution<std::mt19937::result_type> dist3(1,max_valor);
+                int nuevo_valor = int(dist3(rng));
+                
     
                 //Es importante mirar que el nuevo valor no sea igual al viejo
                 while (nuevo_valor == population[ii][punto]){
-                    nuevo_valor = (rand() % max_valor + 1);
+                    std::uniform_int_distribution<std::mt19937::result_type> dist4(1,max_valor);
+                    nuevo_valor = int(dist4(rng));
                 }
                     
                 //Se aplica la mutacion
@@ -153,31 +165,44 @@ vector<vector<int>> mutation(vector<vector<int>> population){
     return population;
 }
 
-int main(){
-
-    vector<vector<int>> population = crearPoblacion(num,largo);
-
-    // Se muestra la poblacion inicial
-    cout << "Poblacion Inicial:" << endl;
-    for (unsigned int i = 0; i < population.size(); i++) { 
-        for (unsigned int j = 0; j < population[i].size(); j++) 
-            cout << population[i][j] << " "; 
-        cout << endl;
+vector<vector<int>> algorithms::eliminar_valores_vector(vector<vector<int>> population) const{
+    // Eliminar el primer valor de cada vector
+    vector<vector<int>> puntuados;
+    int a = int(population.size());
+    int b = int(population[0].size());
+    for (unsigned int i = 0; i < a; i++) { 
+        vector<int> individuo;
+        for (unsigned int j = 1; j < b; j++){
+            individuo.push_back(population[i][j]);
+        }
+        puntuados.push_back(individuo);
     }
-    
-    //Se evoluciona la poblacion
-    for (int i = 0; i<max_generaciones; i++){
-        population = selection_and_reproduction(population);
-        population = mutation(population);
-    }
+    return puntuados;
+}
 
-    // Se muestra la poblacion final
-    cout << "Poblacion Final:" << endl;
-    for (unsigned int i = 0; i < population.size(); i++) { 
-        for (unsigned int j = 0; j < population[i].size(); j++) 
-            cout << population[i][j] << " "; 
-        cout << endl; 
+vector<vector<int>> algorithms::quitar_individuos(vector<vector<int>> population) const{
+    // Esto selecciona los 'n' individuos del final, donde n viene dado por 'pressure'
+    unsigned int individuos_quitar = int(population.size() - pressure);
+    vector<vector<int>> selected;
+    int a = int(population.size());
+    int b = int(population[0].size());
+    for (unsigned int i = 0; i < a; i++) {
+        vector<int> individuo2;
+        if (i >= individuos_quitar){
+            for (unsigned int j = 0; j < b; j++){
+                individuo2.push_back(population[i][j]);
+            }
+            selected.push_back(individuo2);
+        }   
     }
+    return selected;
+}
 
-    return 0;
+vector<vector<int>> algorithms::evolucionar(vector<vector<int>> population, int max_valor, int valor_modelo) const{
+        //Se evoluciona la poblacion
+    for (int i = 0; i<15; i++){ // generaciones
+        population = selection_and_reproduction(population, valor_modelo); // Valor_modelo
+        population = mutation(population, max_valor); // Valor_maximo
+    }
+    return population;
 }

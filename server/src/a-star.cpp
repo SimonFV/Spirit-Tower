@@ -1,9 +1,7 @@
 // A C++ Program to implement A* Search Algorithm 
 #include<bits/stdc++.h> 
+#include <algorithms.hpp>
 using namespace std; 
-
-#define ROW 9 
-#define COL 10 
 
 // Creating a shortcut for int, int pair type 
 typedef pair<int, int> Pair; 
@@ -16,24 +14,27 @@ struct cell
 { 
 	// Row and Column index of its parent 
 	// Note that 0 <= i <= ROW-1 & 0 <= j <= COL-1 
-	int parent_i, parent_j; 
+	int parent_i; 
+	int parent_j;
 	// f = g + h 
-	double f, g, h; 
+	double f; 
+	double g;
+	double h;
 }; 
 
 // A Utility Function to check whether given cell (row, col) 
 // is a valid cell or not. 
-bool isValid(int row, int col) 
+bool isValid(int row, int col, int ROW_, int COL_) 
 { 
 	// Returns true if row number and column number 
 	// is in range 
-	return (row >= 0) && (row < ROW) && 
-		(col >= 0) && (col < COL); 
+	return (row >= 0) && (row < ROW_) && 
+		(col >= 0) && (col < COL_); 
 } 
 
 // A Utility Function to check whether the given cell is 
 // blocked or not 
-bool isUnBlocked(int grid[][COL], int row, int col) 
+bool isUnBlocked(vector<vector<int>> grid, int row, int col) 
 { 
 	// Returns true if the cell is not blocked else false 
 	if (grid[row][col] == 1) 
@@ -56,90 +57,116 @@ bool isDestination(int row, int col, Pair dest)
 double calculateHValue(int row, int col, Pair dest) 
 { 
 	// Return using the distance formula 
-	return ((double)sqrt ((row-dest.first)*(row-dest.first) 
-						+ (col-dest.second)*(col-dest.second))); 
+	return sqrt ((row-dest.first)*(row-dest.first) 
+						+ (col-dest.second)*(col-dest.second)); 
 } 
 
 // A Utility Function to trace the path from the source 
 // to destination 
-void tracePath(cell cellDetails[][COL], Pair dest) 
+std::string tracePath(vector<vector<cell>> cellDetails1, Pair dest) 
 { 
-	printf ("\nThe Path is "); 
+	spdlog::info("The Path is ");
 	int row = dest.first; 
 	int col = dest.second; 
 
 	stack<Pair> Path; 
 
-	while (!(cellDetails[row][col].parent_i == row 
-			&& cellDetails[row][col].parent_j == col )) 
+	while (!(cellDetails1[row][col].parent_i == row 
+			&& cellDetails1[row][col].parent_j == col )) 
 	{ 
 		Path.push (make_pair (row, col)); 
-		int temp_row = cellDetails[row][col].parent_i; 
-		int temp_col = cellDetails[row][col].parent_j; 
+		int temp_row = cellDetails1[row][col].parent_i; 
+		int temp_col = cellDetails1[row][col].parent_j; 
 		row = temp_row; 
 		col = temp_col; 
 	} 
 
+	std::string ruta_aStar = "";
 	Path.push (make_pair (row, col)); 
 	while (!Path.empty()) 
 	{ 
 		pair<int,int> p = Path.top(); 
-		Path.pop(); 
-		printf("-> (%d,%d) ",p.first,p.second); 
+		Path.pop();
+		ruta_aStar += to_string(p.first);
+		ruta_aStar += ",";
+		ruta_aStar += to_string(p.second);
+		ruta_aStar += "-";
 	} 
 
-	return; 
+	return ruta_aStar; 
 } 
+
+vector<vector<cell>> generar1(int row1, int col1, vector<vector<cell>> cellDetails){
+    for(unsigned int i=0; i<row1; i++){
+        vector<cell> v1; 
+        for(unsigned int j=0; j<col1; j++){
+            cell x;
+			x.f = FLT_MAX;
+			x.g = FLT_MAX; 
+			x.h = FLT_MAX; 
+			x.parent_i = -1; 
+			x.parent_j = -1; 
+			v1.push_back(x);
+        }
+        cellDetails.push_back(v1); 
+    }
+	return cellDetails;
+}
 
 // A Function to find the shortest path between 
 // a given source cell to a destination cell according 
 // to A* Search Algorithm 
-void aStarSearch(int grid[][COL], Pair src, Pair dest) 
-{ 
+std::string algorithms::algoritmo_aStar(Pair src, Pair dest, vector<vector<int>> mapa) const { 
+	vector<vector<cell>> cellDetails;
+	int ROW_ = int(mapa.size());
+    int COL_ = int(mapa[0].size()); 
+
 	// If the source is out of range 
-	if (isValid (src.first, src.second) == false) 
+	if (isValid (src.first, src.second, ROW_, COL_) == false) 
 	{ 
-		printf ("Source is invalid\n"); 
-		return; 
+		spdlog::info("Source is invalid");
+		return "Source is invalid"; 
 	} 
 
 	// If the destination is out of range 
-	if (isValid (dest.first, dest.second) == false) 
+	if (isValid (dest.first, dest.second, ROW_, COL_) == false) 
 	{ 
-		printf ("Destination is invalid\n"); 
-		return; 
+		spdlog::info("Destination is invalid");
+		return "Destination is invalid"; 
 	} 
 
 	// Either the source or the destination is blocked 
-	if (isUnBlocked(grid, src.first, src.second) == false || 
-			isUnBlocked(grid, dest.first, dest.second) == false) 
+	if (isUnBlocked(mapa, src.first, src.second) == false || 
+			isUnBlocked(mapa, dest.first, dest.second) == false) 
 	{ 
-		printf ("Source or the destination is blocked\n"); 
-		return; 
+		spdlog::info("Source or the destination is blocked");
+		return "Source or the destination is blocked"; 
 	} 
 
 	// If the destination cell is the same as source cell 
 	if (isDestination(src.first, src.second, dest) == true) 
 	{ 
-		printf ("We are already at the destination\n"); 
-		return; 
+		spdlog::info("We are already at the destination");
+		return "We are already at the destination"; 
 	} 
 
 	// Create a closed list and initialise it to false which means 
 	// that no cell has been included yet 
 	// This closed list is implemented as a boolean 2D array 
-	bool closedList[ROW][COL]; 
+	bool closedList[ROW_][COL_]; 
 	memset(closedList, false, sizeof (closedList)); 
 
 	// Declare a 2D array of structure to hold the details 
 	//of that cell 
-	cell cellDetails[ROW][COL]; 
 
-	int i, j; 
+	cellDetails = generar1(ROW_, COL_, cellDetails);
 
-	for (i=0; i<ROW; i++) 
+	int i; 
+	int j;
+
+	for (i=0; i<ROW_; i++) 
 	{ 
-		for (j=0; j<COL; j++) 
+		for (j=0; j<COL_; j++) 
 		{ 
 			cellDetails[i][j].f = FLT_MAX; 
 			cellDetails[i][j].g = FLT_MAX; 
@@ -150,7 +177,8 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 	} 
 
 	// Initialising the parameters of the starting node 
-	i = src.first, j = src.second; 
+	i = src.first; 
+	j = src.second;
 	cellDetails[i][j].f = 0.0; 
 	cellDetails[i][j].g = 0.0; 
 	cellDetails[i][j].h = 0.0; 
@@ -208,12 +236,14 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 		S.W--> South-West (i+1, j-1)*/
 
 		// To store the 'g', 'h' and 'f' of the 8 successors 
-		double gNew, hNew, fNew; 
+		double gNew; 
+		double hNew;
+		double fNew;
 
 		//----------- 1st Successor (North) ------------ 
 
 		// Only process this cell if this is a valid one 
-		if (isValid(i-1, j) == true) 
+		if (isValid(i-1, j, ROW_, COL_) == true) 
 		{ 
 			// If the destination cell is the same as the 
 			// current successor 
@@ -222,16 +252,16 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 				// Set the Parent of the destination cell 
 				cellDetails[i-1][j].parent_i = i; 
 				cellDetails[i-1][j].parent_j = j; 
-				printf ("The destination cell is found\n"); 
-				tracePath (cellDetails, dest); 
+				spdlog::info("The destination cell is found");
+				//tracePath (cellDetails, dest); 
 				foundDest = true; 
-				return; 
+				return tracePath (cellDetails, dest);
 			} 
 			// If the successor is already on the closed 
 			// list or if it is blocked, then ignore it. 
 			// Else do the following 
 			else if (closedList[i-1][j] == false && 
-					isUnBlocked(grid, i-1, j) == true) 
+					isUnBlocked(mapa, i-1, j) == true) 
 			{ 
 				gNew = cellDetails[i][j].g + 1.0; 
 				hNew = calculateHValue (i-1, j, dest); 
@@ -264,7 +294,7 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 		//----------- 2nd Successor (South) ------------ 
 
 		// Only process this cell if this is a valid one 
-		if (isValid(i+1, j) == true) 
+		if (isValid(i+1, j, ROW_, COL_) == true) 
 		{ 
 			// If the destination cell is the same as the 
 			// current successor 
@@ -273,16 +303,16 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 				// Set the Parent of the destination cell 
 				cellDetails[i+1][j].parent_i = i; 
 				cellDetails[i+1][j].parent_j = j; 
-				printf("The destination cell is found\n"); 
-				tracePath(cellDetails, dest); 
+				spdlog::info("The destination cell is found");
+				// tracePath(cellDetails, dest); 
 				foundDest = true; 
-				return; 
+				return tracePath(cellDetails, dest);
 			} 
 			// If the successor is already on the closed 
 			// list or if it is blocked, then ignore it. 
 			// Else do the following 
 			else if (closedList[i+1][j] == false && 
-					isUnBlocked(grid, i+1, j) == true) 
+					isUnBlocked(mapa, i+1, j) == true) 
 			{ 
 				gNew = cellDetails[i][j].g + 1.0; 
 				hNew = calculateHValue(i+1, j, dest); 
@@ -313,7 +343,7 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 		//----------- 3rd Successor (East) ------------ 
 
 		// Only process this cell if this is a valid one 
-		if (isValid (i, j+1) == true) 
+		if (isValid (i, j+1, ROW_, COL_) == true) 
 		{ 
 			// If the destination cell is the same as the 
 			// current successor 
@@ -322,17 +352,17 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 				// Set the Parent of the destination cell 
 				cellDetails[i][j+1].parent_i = i; 
 				cellDetails[i][j+1].parent_j = j; 
-				printf("The destination cell is found\n"); 
-				tracePath(cellDetails, dest); 
+				spdlog::info("The destination cell is found");
+				//tracePath(cellDetails, dest); 
 				foundDest = true; 
-				return; 
+				return tracePath(cellDetails, dest);
 			} 
 
 			// If the successor is already on the closed 
 			// list or if it is blocked, then ignore it. 
 			// Else do the following 
 			else if (closedList[i][j+1] == false && 
-					isUnBlocked (grid, i, j+1) == true) 
+					isUnBlocked (mapa, i, j+1) == true) 
 			{ 
 				gNew = cellDetails[i][j].g + 1.0; 
 				hNew = calculateHValue (i, j+1, dest); 
@@ -365,7 +395,7 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 		//----------- 4th Successor (West) ------------ 
 
 		// Only process this cell if this is a valid one 
-		if (isValid(i, j-1) == true) 
+		if (isValid(i, j-1, ROW_, COL_) == true) 
 		{ 
 			// If the destination cell is the same as the 
 			// current successor 
@@ -374,17 +404,18 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 				// Set the Parent of the destination cell 
 				cellDetails[i][j-1].parent_i = i; 
 				cellDetails[i][j-1].parent_j = j; 
-				printf("The destination cell is found\n"); 
-				tracePath(cellDetails, dest); 
+				
+				spdlog::info("The destination cell is found");
+				//tracePath(cellDetails, dest); 
 				foundDest = true; 
-				return; 
+				return tracePath(cellDetails, dest); 
 			} 
 
 			// If the successor is already on the closed 
 			// list or if it is blocked, then ignore it. 
 			// Else do the following 
 			else if (closedList[i][j-1] == false && 
-					isUnBlocked(grid, i, j-1) == true) 
+					isUnBlocked(mapa, i, j-1) == true) 
 			{ 
 				gNew = cellDetails[i][j].g + 1.0; 
 				hNew = calculateHValue(i, j-1, dest); 
@@ -417,7 +448,7 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 		//----------- 5th Successor (North-East) ------------ 
 
 		// Only process this cell if this is a valid one 
-		if (isValid(i-1, j+1) == true) 
+		if (isValid(i-1, j+1, ROW_, COL_) == true) 
 		{ 
 			// If the destination cell is the same as the 
 			// current successor 
@@ -426,17 +457,17 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 				// Set the Parent of the destination cell 
 				cellDetails[i-1][j+1].parent_i = i; 
 				cellDetails[i-1][j+1].parent_j = j; 
-				printf ("The destination cell is found\n"); 
-				tracePath (cellDetails, dest); 
+				spdlog::info("The destination cell is found");
+				//tracePath (cellDetails, dest); 
 				foundDest = true; 
-				return; 
+				return tracePath (cellDetails, dest); 
 			} 
 
 			// If the successor is already on the closed 
 			// list or if it is blocked, then ignore it. 
 			// Else do the following 
 			else if (closedList[i-1][j+1] == false && 
-					isUnBlocked(grid, i-1, j+1) == true) 
+					isUnBlocked(mapa, i-1, j+1) == true) 
 			{ 
 				gNew = cellDetails[i][j].g + 1.414; 
 				hNew = calculateHValue(i-1, j+1, dest); 
@@ -469,7 +500,7 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 		//----------- 6th Successor (North-West) ------------ 
 
 		// Only process this cell if this is a valid one 
-		if (isValid (i-1, j-1) == true) 
+		if (isValid (i-1, j-1, ROW_, COL_) == true) 
 		{ 
 			// If the destination cell is the same as the 
 			// current successor 
@@ -478,17 +509,17 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 				// Set the Parent of the destination cell 
 				cellDetails[i-1][j-1].parent_i = i; 
 				cellDetails[i-1][j-1].parent_j = j; 
-				printf ("The destination cell is found\n"); 
-				tracePath (cellDetails, dest); 
+				spdlog::info("The destination cell is found");
+				//tracePath (cellDetails, dest); 
 				foundDest = true; 
-				return; 
+				return tracePath (cellDetails, dest);  
 			} 
 
 			// If the successor is already on the closed 
 			// list or if it is blocked, then ignore it. 
 			// Else do the following 
 			else if (closedList[i-1][j-1] == false && 
-					isUnBlocked(grid, i-1, j-1) == true) 
+					isUnBlocked(mapa, i-1, j-1) == true) 
 			{ 
 				gNew = cellDetails[i][j].g + 1.414; 
 				hNew = calculateHValue(i-1, j-1, dest); 
@@ -519,7 +550,7 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 		//----------- 7th Successor (South-East) ------------ 
 
 		// Only process this cell if this is a valid one 
-		if (isValid(i+1, j+1) == true) 
+		if (isValid(i+1, j+1, ROW_, COL_) == true) 
 		{ 
 			// If the destination cell is the same as the 
 			// current successor 
@@ -528,17 +559,17 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 				// Set the Parent of the destination cell 
 				cellDetails[i+1][j+1].parent_i = i; 
 				cellDetails[i+1][j+1].parent_j = j; 
-				printf ("The destination cell is found\n"); 
-				tracePath (cellDetails, dest); 
+				spdlog::info("The destination cell is found");
+				//tracePath (cellDetails, dest); 
 				foundDest = true; 
-				return; 
+				return tracePath (cellDetails, dest); 
 			} 
 
 			// If the successor is already on the closed 
 			// list or if it is blocked, then ignore it. 
 			// Else do the following 
 			else if (closedList[i+1][j+1] == false && 
-					isUnBlocked(grid, i+1, j+1) == true) 
+					isUnBlocked(mapa, i+1, j+1) == true) 
 			{ 
 				gNew = cellDetails[i][j].g + 1.414; 
 				hNew = calculateHValue(i+1, j+1, dest); 
@@ -571,7 +602,7 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 		//----------- 8th Successor (South-West) ------------ 
 
 		// Only process this cell if this is a valid one 
-		if (isValid (i+1, j-1) == true) 
+		if (isValid (i+1, j-1, ROW_, COL_) == true) 
 		{ 
 			// If the destination cell is the same as the 
 			// current successor 
@@ -580,17 +611,17 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 				// Set the Parent of the destination cell 
 				cellDetails[i+1][j-1].parent_i = i; 
 				cellDetails[i+1][j-1].parent_j = j; 
-				printf("The destination cell is found\n"); 
-				tracePath(cellDetails, dest); 
+				spdlog::info("The destination cell is found");
+				//tracePath(cellDetails, dest); 
 				foundDest = true; 
-				return; 
+				return tracePath(cellDetails, dest);  
 			} 
 
 			// If the successor is already on the closed 
 			// list or if it is blocked, then ignore it. 
 			// Else do the following 
 			else if (closedList[i+1][j-1] == false && 
-					isUnBlocked(grid, i+1, j-1) == true) 
+					isUnBlocked(mapa, i+1, j-1) == true) 
 			{ 
 				gNew = cellDetails[i][j].g + 1.414; 
 				hNew = calculateHValue(i+1, j-1, dest); 
@@ -625,43 +656,8 @@ void aStarSearch(int grid[][COL], Pair src, Pair dest)
 	// list is empty, then we conclude that we failed to 
 	// reach the destiantion cell. This may happen when the 
 	// there is no way to destination cell (due to blockages) 
-	if (foundDest == false) 
-		printf("Failed to find the Destination Cell\n"); 
+	if (foundDest == false)
+		spdlog::info("Failed to find the Destination Cell");
 
-	return; 
+	return "No encontrado"; 
 } 
-
-
-// Driver program to test above function 
-int main() 
-{ 
-    cout << "Inicio del Algortimo" << endl;
-
-	/* Description of the Grid- 
-	1--> The cell is not blocked 
-	0--> The cell is blocked */
-	int grid[ROW][COL] = 
-	{ 
-		{ 1, 0, 1, 1, 1, 1, 0, 1, 1, 1 }, 
-		{ 1, 0, 1, 0, 1, 1, 1, 0, 1, 1 }, 
-		{ 1, 0, 1, 0, 1, 1, 0, 1, 0, 1 }, 
-		{ 1, 0, 1, 0, 1, 0, 0, 0, 0, 1 }, 
-		{ 1, 1, 1, 0, 1, 1, 1, 0, 1, 0 }, 
-		{ 1, 0, 1, 1, 1, 1, 0, 1, 0, 0 }, 
-		{ 1, 0, 0, 0, 0, 1, 0, 0, 0, 1 }, 
-		{ 1, 0, 1, 1, 1, 1, 0, 1, 1, 1 }, 
-		{ 1, 1, 1, 0, 0, 0, 1, 0, 0, 1 } 
-	}; 
-
-	// Source is the left-most bottom-most corner 
-	Pair src = make_pair(8, 0); 
-
-	// Destination is the left-most top-most corner 
-	Pair dest = make_pair(0, 0); 
-
-	aStarSearch(grid, src, dest); 
-
-    cout << "Final del Algortimo" << endl;
-
-	return(0); 
-}
