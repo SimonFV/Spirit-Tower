@@ -18,7 +18,7 @@ install:
 script:
   # Adds the spdlog library
   - cd server
-  - git clone https://github.com/google/googletest.git
+  #- git clone https://github.com/google/googletest.git
   - mkdir external && cd external
   - git clone https://github.com/gabime/spdlog.git 
   - cd spdlog && mkdir build && cd build
@@ -34,15 +34,15 @@ script:
   - build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build/
   # And finally run the SonarQube analysis - read the "sonar-project.properties"
   # file to see the specific configurations
-  - cd build/server/
-  - ctest
-  - cd .. && cd ..
-  - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; 
-    then
-      make gcov
-      make lcov
-      bash <(curl -s https://codecov.io/bash) -X gcov || echo "Codecov did not collect coverage reports"
-    fi
+  #- cd build/server/
+  #- ctest
+  #- cd .. && cd ..
+  #- if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; 
+  #  then
+  #    make gcov
+  #    make lcov
+  #    bash <(curl -s https://codecov.io/bash) -X gcov || echo "Codecov did not collect coverage reports"
+  #  fi
   - sonar-scanner
             
 cache:
