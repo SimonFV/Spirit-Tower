@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <ghost.hpp>
 #include <player.hpp>
+#include <algorithms.hpp>
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/basic_file_sink.h"
 
@@ -41,6 +42,7 @@ private:
     string str_grid;
     unordered_map<int, ghost *> ghostList;
     player *p1;
+    algorithms *a1;
 
 private:
     /**
@@ -49,6 +51,7 @@ private:
     game()
     {
         str_grid = "";
+        a1 = new algorithms();
         p1 = new player();
         ghostList[1] = new grayGhost(1);
         ghostList[2] = new grayGhost(2);
@@ -94,6 +97,7 @@ public:
      * @return String con el dato de la petición
      */
     string process_data(string data);
+    void updateLevel(string data);
     void updatePlayer(string data);
     void newBitMap(string str_bitmap);
     void deleteBitMap();
