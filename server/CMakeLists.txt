@@ -9,10 +9,10 @@ set(src
     src/server.cpp
     src/game.cpp
     src/enemies.cpp
-    #src/genetic_algorithm.cpp
-    #src/bresenham_algorithm.cpp
-    #src/backtracking.cpp
-    #src/a-star.cpp
+    src/genetic_algorithm.cpp
+    src/bresenham_algorithm.cpp
+    src/backtracking.cpp
+    src/a-star.cpp
 )
 
 set(head
@@ -20,13 +20,11 @@ set(head
     include/game.hpp
     include/player.hpp
     include/ghost.hpp
+    include/algorithms.hpp
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/include/)
 
-#Test
-enable_testing()
-add_subdirectory(googletest)
 
 #Logging
 add_subdirectory(spdlog)
@@ -68,8 +66,8 @@ option (BUILD_TESTING "Build the testing tree." ON)
 # Only build tests if we are the top-level project
 # Allows this to be used by super projects with `add_subdirectory`
 if (BUILD_TESTING AND (PROJECT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR))
-  enable_testing()
-  #Tests
-  add_subdirectory(test)
+    enable_testing()
+    add_subdirectory(googletest)
+    add_subdirectory(test)
 endif()
 

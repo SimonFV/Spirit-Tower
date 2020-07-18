@@ -1,94 +1,102 @@
 #include <stdio.h>
+#include <algorithms.hpp>
+#include <vector>
+#include<bits/stdc++.h> 
 
-#define SIZE 6
+vector<vector<int>> solution_final;
+int contador = 1;
 
-//the maze problem
-int maze[SIZE][SIZE] = {
-    {0,1,1,1,1,1},
-    {0,1,0,0,0,1},
-    {0,1,0,1,0,0},
-    {0,1,0,0,1,0},
-    {0,1,1,0,1,0},
-    {0,0,0,0,1,0}
-};
-
-// Positions start at 0 as in array
-int x_start = 2; 
-int y_start = 3;
-
-int x_end = 3; 
-int y_end = 5;
-
-//matrix to store the solution
-int solution[SIZE][SIZE];
+vector<vector<int>> algorithms::generar(int row1, int col1, vector<vector<int>> solution) const{
+    for(unsigned int i=0; i<row1; i++){
+        vector<int> v1; 
+        for(unsigned int j=0; j<col1; j++){
+            v1.push_back(0);
+        }
+        solution_final.push_back(v1);
+        solution.push_back(v1); 
+    }
+    return solution;
+}
 
 //function to print the solution matrix
-void printsolution()
-{
-    int i,j;
-    for(i=0;i<SIZE;i++)
-    {
-        for(j=0;j<SIZE;j++)
-        {
-            printf("%d\t",solution[i][j]);
+std::string algorithms::ruta_backtracking() const{
+    vector<vector<int>> ordenar_backtracking;
+    int a = int(solution_final.size());
+    int b = int(solution_final[0].size());
+    for(unsigned int i=0; i<a; i++){ 
+        for(unsigned int j=0; j<b; j++){
+            if(solution_final[i][j]!=0){
+                vector<int> v1;
+                v1.push_back(solution_final[i][j]);
+                v1.push_back(i);
+                v1.push_back(j);
+                ordenar_backtracking.push_back(v1);
+            }
         }
-        printf("\n\n");
     }
+    sort(ordenar_backtracking.begin(), ordenar_backtracking.end());
+
+    std::string ruta_a_seguir = "";
+
+    for(unsigned int i=0; i<ordenar_backtracking.size(); i++){
+        for(unsigned int j=1; j<ordenar_backtracking[0].size(); j++){
+            if (j==1){
+                ruta_a_seguir += to_string(ordenar_backtracking[i][j]); 
+                ruta_a_seguir += ","; 
+            }else{
+                ruta_a_seguir += to_string(ordenar_backtracking[i][j]); 
+            } 
+        }
+        ruta_a_seguir += "-"; 
+    }
+
+    return ruta_a_seguir;
 }
 
 //function to solve the maze
 //using backtracking
-int solvemaze(int r, int c)
-{
+int algorithms::algoritmo_backtracking(int r, int c, int x_end, int y_end, vector<vector<int>> mapa, vector<vector<int>> solution) const{
+
+    if (solution.size()==0){ 
+        solution = generar(int(mapa.size()), int(mapa[0].size()), solution);
+    }
     //if destination is reached, maze is solved
     //destination is the last cell(maze[SIZE-1][SIZE-1])
     if((r==y_end) && (c==x_end))
     {
         solution[r][c] = 1;
+        solution_final[r][c] = contador;
+        contador +=1;
         return 1;
     }
     //checking if we can visit in this cell or not
     //the indices of the cell must be in (0,SIZE-1)
     //and solution[r][c] == 0 is making sure that the cell is not already visited
     //maze[r][c] == 0 is making sure that the cell is not blocked
-    if(r>=0 && c>=0 && r<SIZE && c<SIZE && solution[r][c] == 0 && maze[r][c] == 0)
+    if(r>=0 && c>=0 && r<mapa.size() && c<mapa[0].size() && solution[r][c] == 0 && mapa[r][c] == 0)
     {
         //if safe to visit then visit the cell
         solution[r][c] = 1;
+        solution_final[r][c] = contador;
+        contador +=1;
         //going down
-        if(solvemaze(r+1, c))
+        if(algoritmo_backtracking(r+1, c, x_end, y_end, mapa, solution))
             return 1;
         //going right
-        if(solvemaze(r, c+1))
+        if(algoritmo_backtracking(r, c+1, x_end, y_end, mapa, solution))
             return 1;
         //going up
-        if(solvemaze(r-1, c))
+        if(algoritmo_backtracking(r-1, c, x_end, y_end, mapa, solution))
             return 1;
         //going left
-        if(solvemaze(r, c-1))
+        if(algoritmo_backtracking(r, c-1, x_end, y_end, mapa, solution))
             return 1;
         //backtracking
         solution[r][c] = 0;
+        solution_final[r][c] = 0;
+        contador -=1;
         return 0;
     }
     return 0;
 
-}
-
-int main()
-{
-    //making all elements of the solution matrix 0
-    int i,j;
-    for(i=0; i<SIZE; i++)
-    {
-        for(j=0; j<SIZE; j++)
-        {
-            solution[i][j] = 0;
-        }
-    }
-    if (solvemaze(y_start,x_start))
-        printsolution();
-    else
-        printf("No solution\n");
-    return 0;
 }

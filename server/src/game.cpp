@@ -1,4 +1,4 @@
-
+#include <algorithms.hpp>
 #include <game.hpp>
 
 using namespace std;
@@ -25,6 +25,32 @@ game *game::getInstance()
 
 void game::run_game() const
 {
+    vector<vector<int>> mapa = {
+      { 1, 0, 1, 1, 1, 1, 0, 1, 1 }, 
+      { 1, 0, 1, 0, 1, 1, 1, 0, 1 }, 
+      { 1, 1, 1, 0, 1, 1, 1, 0, 0 }, 
+      { 1, 0, 1, 0, 0, 0, 0, 1, 0 }, 
+      { 1, 1, 1, 0, 0, 1, 0, 0, 0 }, 
+      { 1, 0, 1, 0, 1, 1, 0, 1, 0 }, 
+      { 1, 0, 0, 0, 0, 1, 0, 1, 0 }, 
+      { 1, 0, 1, 1, 1, 1, 1, 1, 0 }, 
+      { 1, 1, 1, 0, 0, 0, 1, 0, 0 }  
+    };
+
+    // ---- Ejecutar A Star (y_inicial, x_inicial, y_final, x_final)
+    spdlog::info(a1->algoritmo_aStar(make_pair(3, 0), make_pair(3, 7), mapa));
+
+    // ---- Ejecutar Backtracking (y_inicial, x_inicial, x_final, y_final) 
+    vector<vector<int>> solution;  
+    if(a1->algoritmo_backtracking(1, 3, 7, 8, mapa, solution)){
+        spdlog::info(a1->ruta_backtracking());
+    }else{
+        spdlog::error("No hay solucion");
+    }
+
+    // ---- Ejecutar Bresenham (x_inicial, y_inicial, x_final, y_final)
+    spdlog::info(a1->algoritmo_bresenham(1,1,8,5));
+
     thread send;
     send = thread(game::checkUpdates);
 
@@ -62,8 +88,69 @@ string game::process_data(string data)
         updatePlayer(data);
         return "";
     }
+    else if (key == "level")
+    {
+        data.erase(0, 6);
+        updateLevel(data);
+        return "";
+    }
     spdlog::info("Client: {}", data);
     return data;
+}
+
+void game::updateLevel(string data)
+{        
+    string key = "";
+
+    int i = 0;
+    while (data[i] != ',')
+    {
+        key += data[i];
+        i++;
+    }
+    i++;
+
+    if (key == "1")
+    {   
+        
+        spdlog::info("Nivel 1");
+
+        a1->setPopulation(a1->crearPoblacion());
+
+        spdlog::info("Poblacion Inicial");
+        a1->mostrarPoblacion(a1->getPopulation());
+
+
+    }else if (key == "2")
+    {
+        spdlog::info("Nivel 2");
+        
+        a1->setPopulation(a1->evolucionar(a1->getPopulation(), 4, 4));
+        spdlog::info("Poblacion Evolucionada");
+        a1->mostrarPoblacion(a1->getPopulation());
+    }else if (key == "3")
+    {
+        spdlog::info("Nivel 3");
+        
+        a1->setPopulation(a1->evolucionar(a1->getPopulation(), 5, 5));
+        spdlog::info("Poblacion Evolucionada");
+        a1->mostrarPoblacion(a1->getPopulation());
+    }else if (key == "4")
+    {
+        spdlog::info("Nivel 4");
+        
+        a1->setPopulation(a1->evolucionar(a1->getPopulation(), 6, 6));
+        spdlog::info("Poblacion Evolucionada");
+        a1->mostrarPoblacion(a1->getPopulation());
+    }else if (key == "5")
+    {
+        spdlog::info("Nivel 5");
+        
+        a1->setPopulation(a1->evolucionar(a1->getPopulation(), 7, 7));
+        spdlog::info("Poblacion Evolucionada");
+        a1->mostrarPoblacion(a1->getPopulation());
+    }
+    
 }
 
 void game::updatePlayer(string data)

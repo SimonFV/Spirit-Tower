@@ -32,6 +32,27 @@ public:
     friend class grayGhost;
     friend class redGhost;
     friend class blueGhost;
+
+    public:
+        void setSpeedPatrol(int speedPatrol_nuevo)
+        {
+            speedPatrol = speedPatrol_nuevo;
+        }
+
+        void setSpeedPersec(int speedPersec_nuevo)
+        {
+            speedPersec = speedPersec_nuevo;
+        }
+
+        void setVisionRange(int visionRange_nuevo)
+        {
+            visionRange = visionRange_nuevo;
+        }
+
+    public:
+        int getSpeedPatrol() { return speedPatrol; }
+        int getSpeedPersec() { return speedPersec; }
+        int getVisionRange() { return visionRange; }
 };
 
 class grayGhost : public ghost
