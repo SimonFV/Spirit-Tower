@@ -49,7 +49,7 @@ public class Patrulla : MonoBehaviour
         p1 = PointForAngle(halfVisionAngle, visionDistance);
         p2 = PointForAngle(-halfVisionAngle, visionDistance);
 
-        Gizmos.color = detected? Color.green : Color.red;
+        Gizmos.color = detected ? Color.green : Color.red;
         Gizmos.DrawLine(head.position, (Vector2)head.position + p1);
         Gizmos.DrawLine(head.position, (Vector2)head.position + p2);
 
@@ -97,11 +97,11 @@ public class Patrulla : MonoBehaviour
                                                     waypoints[waypointIndex].transform.position,
                                                     moveSpeed * Time.deltaTime);
 
-        if(transform.position == waypoints[waypointIndex].transform.position)
+        if (transform.position == waypoints[waypointIndex].transform.position)
         {
             waypointIndex += 1;
         }
-        if(waypointIndex == waypoints.Length)
+        if (waypointIndex == waypoints.Length)
         {
             waypointIndex = 0;
         }
@@ -122,7 +122,7 @@ public class Patrulla : MonoBehaviour
         if (Vector3.Angle(playerVector.normalized, head.right) < visionAngle * 0.5f)
         {
 
-            if(playerVector.magnitude < visionDistance)
+            if (playerVector.magnitude < visionDistance)
             {
                 detected = true;
                 if (!this.GetComponent<SpriteRenderer>().enabled)
@@ -132,8 +132,8 @@ public class Patrulla : MonoBehaviour
             }
 
         }
-        
-        
+
+
     }
 
     IEnumerator waiter(Collision2D collision, PlayerMovement player)
@@ -166,7 +166,7 @@ public class Patrulla : MonoBehaviour
             if (shield.playerUsingShield)
             {
             }
-            if (Weapon.playerUsingBlade) 
+            if (Weapon.playerUsingBlade)
             {
                 this.GetComponent<SpriteRenderer>().enabled = false;
                 this.follow = false;

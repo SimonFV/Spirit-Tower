@@ -40,7 +40,7 @@ public class Client : MonoBehaviour
 
     }
 
-    /*
+
     // Start is called before the first frame update
     void Start()
     {
@@ -62,35 +62,34 @@ public class Client : MonoBehaviour
             tcpClient.Close();
         }
     }
-    */
+
 
 
     //Envía un mensaje por TCP
     public void sendMsgTCP(string send_msg)
     {
-        /*
+
         if (!tcpClient.Connected || string.IsNullOrEmpty(send_msg)) { return; }
 
         //Set up async read
         var stream = tcpClient.GetStream();
-        //stream.BeginRead(tcpBuffer, 0, tcpBuffer.Length, MessageReceived, null);
 
         //send message
         byte[] msg = Encoding.ASCII.GetBytes(send_msg);
         stream.Write(msg, 0, msg.Length);
-        */
+
     }
 
     //Envía un mensaje por UDP
     public void sendMsgUDP(string send_msg)
     {
-        /*
+
         Byte[] senddata = Encoding.ASCII.GetBytes(send_msg);
         udpClientSend.Send(senddata, senddata.Length);
-        */
+
     }
 
-    /*
+
     // Update is called once per frame
     void Update()
     {
@@ -150,5 +149,5 @@ public class Client : MonoBehaviour
 
         }
     }
-    */
+
 }

@@ -64,6 +64,8 @@ public class PlayerMovement : MonoBehaviour
     private int[,] bitmap;
     private string string_bitmap;
 
+    private bool map_sent = true;
+
     private void putLife()
     {
 
@@ -113,8 +115,6 @@ public class PlayerMovement : MonoBehaviour
 
         //Envía el mapa de bits del nivel actual al servidor.
         createBitMap();
-        Debug.Log(string_bitmap);
-        //Client.Instance.sendMsgTCP(string_bitmap);
 
     }
 
@@ -132,7 +132,7 @@ public class PlayerMovement : MonoBehaviour
         //SE EJECUTA LA ACCIÓN COMO RESULTADO DE PRESIONAR LA TECLA F
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if (!usingBlade) 
+            if (!usingBlade)
             {
                 if (usingShield)
                 {
@@ -152,7 +152,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.G))
         {
-            if (!usingShield) 
+            if (!usingShield)
             {
                 if (usingBlade)
                 {
@@ -182,11 +182,11 @@ public class PlayerMovement : MonoBehaviour
         }
 
         camara.transform.position = new Vector3(transform.position.x, transform.position.y, camara.transform.position.z);
-        
+
         bladePosRight = new Vector3(transform.position.x + 0.65f, transform.position.y, 0);
         bladePosLeft = new Vector3(transform.position.x - 0.65f, transform.position.y, 0);
         bladeLeftOrRight = transform.localScale;
-        
+
         shieldPosRight = new Vector3(transform.position.x + 1f, transform.position.y, 0);
         shieldPosLeft = new Vector3(transform.position.x - 1f, transform.position.y, 0);
         shieldLeftOrRight = transform.localScale;
@@ -208,8 +208,14 @@ public class PlayerMovement : MonoBehaviour
 
         if (rb.velocity.magnitude != 0)
         {
+            if (map_sent)
+            {
+                Client.Instance.sendMsgTCP("bitmap," + string_bitmap);
+                map_sent = false;
+            }
             playerPos = grid.WorldToCell(rb.transform.position);
-            //Client.Instance.sendMsgUDP(playerPos.ToString("0"));
+            Client.Instance.sendMsgUDP("player,pos," + playerPos.x.ToString("0") + ","
+                                        + playerPos.y.ToString("0") + "\n");
         }
 
     }

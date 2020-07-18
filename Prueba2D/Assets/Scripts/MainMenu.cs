@@ -34,14 +34,6 @@ public class MainMenu : MonoBehaviour
 
     }
 
-    void OnDestroy()
-    {
-        if (tcpClient.Connected)
-        {
-            tcpClient.Close();
-        }
-    }
-
     public void quitGame()
     {
         Application.Quit();
