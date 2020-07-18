@@ -58,10 +58,12 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 target_link_libraries(run spdlog Threads::Threads)
-target_link_libraries(server_library spdlog)
+target_link_libraries(server_library PUBLIC coverage_config spdlog)
 
 
 #Coverage
+
+
 option (BUILD_TESTING "Build the testing tree." ON)
 # Only build tests if we are the top-level project
 # Allows this to be used by super projects with `add_subdirectory`
