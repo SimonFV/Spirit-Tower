@@ -28,7 +28,7 @@ script:
   # Adds the spdlog library
   - cd server
   - git clone https://github.com/google/googletest.git
-  - git clone git://github.com/RWTH-HPC/CMake-codecov.git
+  - git clone https://github.com/gabime/spdlog.git
   # Prepare the build system
   - cd ..
   - mkdir build && cd build
