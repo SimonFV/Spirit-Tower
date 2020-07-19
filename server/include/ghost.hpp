@@ -20,7 +20,6 @@ private:
     int visionRange;
 
 public:
-    void moveTo(int x, int y);
     /**
      * Constructor de la clase ghost
      */
@@ -53,6 +52,9 @@ public:
         int getSpeedPatrol() { return speedPatrol; }
         int getSpeedPersec() { return speedPersec; }
         int getVisionRange() { return visionRange; }
+
+        int getPosX() { return position[0]; }
+        int getPosY() { return position[1]; }
 };
 
 class grayGhost : public ghost

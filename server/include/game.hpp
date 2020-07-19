@@ -2,7 +2,8 @@
 #define GAME_H
 
 #include <server.hpp>
-#include <unordered_map>
+#include <iterator> 
+#include <map> 
 #include <ghost.hpp>
 #include <player.hpp>
 #include <algorithms.hpp>
@@ -40,7 +41,7 @@ private:
      */
     int **grid, sizeX, sizeY;
     string str_grid;
-    unordered_map<int, ghost *> ghostList;
+    map<int, ghost *> ghostList;
     player *p1;
     algorithms *a1;
 
@@ -53,9 +54,6 @@ private:
         str_grid = "";
         a1 = new algorithms();
         p1 = new player();
-        ghostList[1] = new grayGhost(1);
-        ghostList[2] = new grayGhost(2);
-        ghostList[3] = new grayGhost(3);
         sizeX = 0;
         sizeY = 0;
     }
@@ -97,6 +95,7 @@ public:
      * @return String con el dato de la petición
      */
     string process_data(string data);
+    void updateAlgorithm(string data);
     void updateLevel(string data);
     void updatePlayer(string data);
     void newBitMap(string str_bitmap);
@@ -104,6 +103,9 @@ public:
 
 public:
     string getStrGrid() { return str_grid; }
+    int ** getMatrGrid() { return grid; }
+    int getSizeXMatr() { return sizeX; }
+    int getSizeYMatr() { return sizeY; }
 };
 
 #endif
