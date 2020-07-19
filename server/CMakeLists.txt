@@ -40,10 +40,3 @@ find_package(Threads REQUIRED)
 
 target_link_libraries(run spdlog Threads::Threads)
 target_link_libraries(server_library spdlog)
-
-
-#Coverage
-enable_testing()
-add_subdirectory(googletest)
-
-add_subdirectory(test)

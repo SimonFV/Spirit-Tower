@@ -9,7 +9,6 @@ addons:
     secure: "OCFnsndonweK+nrR9L3mrl1Iyxw8DKxpEgQyHc8FyQEC6m+y9aVhn3wNUqif8lsT3XxqeZV4Pkfn2HGJSX4rlSz/a4tRcmhRjR7SJccJF012gFJY/WjLWQW28bEuyYgzFpA4IMhMmHsGI3frdBXc6sZbsKIpMXZYkzSkuxE3lnE9W8bupaQGnhfcOAmFDelkGjRJB/s2CzDz/5RAX4SkSCWZ7SskNuB9VrpZdZqQCh3d452d+o/uzdARGQJBYrfloKe8d8wTF4vQToxfr/jKapLZ5rDF6TQ1NgkJlhr/E2uaWfl0HQN3bSHo03OjFZGNEPPf4gn24pr/Psq5VEZMObe6WhhByS9XyzyWjQ0c2ewilgxyaQiGpqgDaAe3A2gFgO1t3T1iYo1CXDf6eTz9IXYS5R10s3k1vHVfXQnW2JoGivbt7Nu/ShOHO0IDHiDk9k7jr+H5ZTaVAVdmg1aYxbrcILM20c0hTnlzWc8sc9+8qDEkhRQSOvUpHIIYn0JE8ZmGwxifQbhQxi7UkKFblMEawUkX2pYXJFymeAVmD7nmscrYOTj00YsgNSqNzYp5Otv66AMKkW+hzx2zzaHYJqETux+/ya8YPJlzxjAKiKayS3KVdvpeVngUWcBXDnL5H6UmgjkxencU01ItCnVAyHAkBg5pR76g0f9xVMmJCrY="
   apt:
     packages:
-      - lcov
       - gcc-4.8
       - g++-4.8
       
@@ -19,7 +18,6 @@ install:
 script:
   # Adds the spdlog library
   - cd server
-  - git clone https://github.com/google/googletest.git
   - git clone https://github.com/gabime/spdlog.git
   # Prepare the build system
   - cd ..
@@ -31,12 +29,6 @@ script:
   - build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build/
   # And finally run the SonarQube analysis - read the "sonar-project.properties"
   # file to see the specific configurations
-  - cd build/server/test/
-  - ./server_test
-  - lcov --capture --directory . --output-file coverage.info
-  - cd CMakeFiles/server_test.dir/
-  - gcov serverTest.cpp.gcno
-  - cd .. && cd .. && cd .. && cd .. && cd ..
   - sonar-scanner
 
 
