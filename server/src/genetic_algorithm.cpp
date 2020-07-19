@@ -11,17 +11,6 @@ const int num = 3;
 const int pressure = 2;
 const double mutation_chance = 0.2;
 
-// Mostrar la poblacion
-void algorithms::mostrarPoblacion(vector<vector<int>> population) const{
-    int a = int(population.size());
-    int b = int(population[0].size());
-    for (unsigned int i = 0; i < a; i++) { 
-        for (unsigned int j = 0; j < b; j++)
-            spdlog::info(population[i][j]);
-        spdlog::info(" ");
-    }
-}
-
 // Crea la poblacion.
 vector<vector<int>> algorithms::crearPoblacion() const{
     std::random_device dev;

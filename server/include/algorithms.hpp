@@ -4,9 +4,9 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/basic_file_sink.h"
 
@@ -20,7 +20,6 @@ class algorithms{
     public:
 
         // Metodos algoritmo genetico
-        void mostrarPoblacion(vector<vector<int>> population) const;
         vector<vector<int>> crearPoblacion() const;
         vector<vector<int>> fitness(vector<vector<int>> population, int valor_modelo) const;
         vector<vector<int>> selection_and_reproduction(vector<vector<int>> population, int valor_modelo) const;
@@ -44,7 +43,7 @@ class algorithms{
 
         // Metodos algortimo A Star
         typedef pair<int, int> Pair;
-        std::string algoritmo_aStar(Pair src, Pair dest, vector<vector<int>> mapa) const;
+        std::string algoritmo_aStar(Pair src, Pair dest) const;
     
     public:
 

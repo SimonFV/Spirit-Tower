@@ -1,6 +1,8 @@
 // A C++ Program to implement A* Search Algorithm 
 #include<bits/stdc++.h> 
 #include <algorithms.hpp>
+#include <game.hpp>
+
 using namespace std; 
 
 // Creating a shortcut for int, int pair type 
@@ -34,10 +36,10 @@ bool isValid(int row, int col, int ROW_, int COL_)
 
 // A Utility Function to check whether the given cell is 
 // blocked or not 
-bool isUnBlocked(vector<vector<int>> grid, int row, int col) 
+bool isUnBlocked(int row, int col) 
 { 
 	// Returns true if the cell is not blocked else false 
-	if (grid[row][col] == 1) 
+	if (game::getInstance()->getMatrGrid()[col][row] == 1) 
 		return (true); 
 	else
 		return (false); 
@@ -116,10 +118,10 @@ vector<vector<cell>> generar1(int row1, int col1, vector<vector<cell>> cellDetai
 // A Function to find the shortest path between 
 // a given source cell to a destination cell according 
 // to A* Search Algorithm 
-std::string algorithms::algoritmo_aStar(Pair src, Pair dest, vector<vector<int>> mapa) const { 
+std::string algorithms::algoritmo_aStar(Pair src, Pair dest) const { 
 	vector<vector<cell>> cellDetails;
-	int ROW_ = int(mapa.size());
-    int COL_ = int(mapa[0].size()); 
+	int ROW_ = game::getInstance()->getSizeYMatr();
+    int COL_ = game::getInstance()->getSizeXMatr() - 1; 
 
 	// If the source is out of range 
 	if (isValid (src.first, src.second, ROW_, COL_) == false) 
@@ -136,8 +138,8 @@ std::string algorithms::algoritmo_aStar(Pair src, Pair dest, vector<vector<int>>
 	} 
 
 	// Either the source or the destination is blocked 
-	if (isUnBlocked(mapa, src.first, src.second) == false || 
-			isUnBlocked(mapa, dest.first, dest.second) == false) 
+	if (isUnBlocked(src.first, src.second) == false || 
+			isUnBlocked(dest.first, dest.second) == false) 
 	{ 
 		spdlog::info("Source or the destination is blocked");
 		return "Source or the destination is blocked"; 
@@ -261,7 +263,7 @@ std::string algorithms::algoritmo_aStar(Pair src, Pair dest, vector<vector<int>>
 			// list or if it is blocked, then ignore it. 
 			// Else do the following 
 			else if (closedList[i-1][j] == false && 
-					isUnBlocked(mapa, i-1, j) == true) 
+					isUnBlocked(i-1, j) == true) 
 			{ 
 				gNew = cellDetails[i][j].g + 1.0; 
 				hNew = calculateHValue (i-1, j, dest); 
@@ -312,7 +314,7 @@ std::string algorithms::algoritmo_aStar(Pair src, Pair dest, vector<vector<int>>
 			// list or if it is blocked, then ignore it. 
 			// Else do the following 
 			else if (closedList[i+1][j] == false && 
-					isUnBlocked(mapa, i+1, j) == true) 
+					isUnBlocked(i+1, j) == true) 
 			{ 
 				gNew = cellDetails[i][j].g + 1.0; 
 				hNew = calculateHValue(i+1, j, dest); 
@@ -362,7 +364,7 @@ std::string algorithms::algoritmo_aStar(Pair src, Pair dest, vector<vector<int>>
 			// list or if it is blocked, then ignore it. 
 			// Else do the following 
 			else if (closedList[i][j+1] == false && 
-					isUnBlocked (mapa, i, j+1) == true) 
+					isUnBlocked (i, j+1) == true) 
 			{ 
 				gNew = cellDetails[i][j].g + 1.0; 
 				hNew = calculateHValue (i, j+1, dest); 
@@ -415,7 +417,7 @@ std::string algorithms::algoritmo_aStar(Pair src, Pair dest, vector<vector<int>>
 			// list or if it is blocked, then ignore it. 
 			// Else do the following 
 			else if (closedList[i][j-1] == false && 
-					isUnBlocked(mapa, i, j-1) == true) 
+					isUnBlocked(i, j-1) == true) 
 			{ 
 				gNew = cellDetails[i][j].g + 1.0; 
 				hNew = calculateHValue(i, j-1, dest); 
@@ -467,7 +469,7 @@ std::string algorithms::algoritmo_aStar(Pair src, Pair dest, vector<vector<int>>
 			// list or if it is blocked, then ignore it. 
 			// Else do the following 
 			else if (closedList[i-1][j+1] == false && 
-					isUnBlocked(mapa, i-1, j+1) == true) 
+					isUnBlocked(i-1, j+1) == true) 
 			{ 
 				gNew = cellDetails[i][j].g + 1.414; 
 				hNew = calculateHValue(i-1, j+1, dest); 
@@ -519,7 +521,7 @@ std::string algorithms::algoritmo_aStar(Pair src, Pair dest, vector<vector<int>>
 			// list or if it is blocked, then ignore it. 
 			// Else do the following 
 			else if (closedList[i-1][j-1] == false && 
-					isUnBlocked(mapa, i-1, j-1) == true) 
+					isUnBlocked(i-1, j-1) == true) 
 			{ 
 				gNew = cellDetails[i][j].g + 1.414; 
 				hNew = calculateHValue(i-1, j-1, dest); 
@@ -569,7 +571,7 @@ std::string algorithms::algoritmo_aStar(Pair src, Pair dest, vector<vector<int>>
 			// list or if it is blocked, then ignore it. 
 			// Else do the following 
 			else if (closedList[i+1][j+1] == false && 
-					isUnBlocked(mapa, i+1, j+1) == true) 
+					isUnBlocked(i+1, j+1) == true) 
 			{ 
 				gNew = cellDetails[i][j].g + 1.414; 
 				hNew = calculateHValue(i+1, j+1, dest); 
@@ -621,7 +623,7 @@ std::string algorithms::algoritmo_aStar(Pair src, Pair dest, vector<vector<int>>
 			// list or if it is blocked, then ignore it. 
 			// Else do the following 
 			else if (closedList[i+1][j-1] == false && 
-					isUnBlocked(mapa, i+1, j-1) == true) 
+					isUnBlocked(i+1, j-1) == true) 
 			{ 
 				gNew = cellDetails[i][j].g + 1.414; 
 				hNew = calculateHValue(i+1, j-1, dest); 
