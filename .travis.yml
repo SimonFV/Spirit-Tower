@@ -34,7 +34,7 @@ script:
   - cd build/server/test/
   - ./server_test
   - lcov --capture --directory . --output-file coverage.info
-  - cd CMakeList/server_test.dir/
+  - cd CMakeFiles/server_test.dir/
   - gcov serverTest.cpp.gcno
   - cd .. && cd .. && cd .. && cd .. && cd ..
   - sonar-scanner
