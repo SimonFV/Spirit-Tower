@@ -25,31 +25,6 @@ game *game::getInstance()
 
 void game::run_game() const
 {
-    vector<vector<int>> mapa = {
-      { 1, 0, 1, 1, 1, 1, 0, 1, 1 }, 
-      { 1, 0, 1, 0, 1, 1, 1, 0, 1 }, 
-      { 1, 1, 1, 0, 1, 1, 1, 0, 0 }, 
-      { 1, 0, 1, 0, 0, 0, 0, 1, 0 }, 
-      { 1, 1, 1, 0, 0, 1, 0, 0, 0 }, 
-      { 1, 0, 1, 0, 1, 1, 0, 1, 0 }, 
-      { 1, 0, 0, 0, 0, 1, 0, 1, 0 }, 
-      { 1, 0, 1, 1, 1, 1, 1, 1, 0 }, 
-      { 1, 1, 1, 0, 0, 0, 1, 0, 0 }  
-    };
-
-    // ---- Ejecutar A Star (y_inicial, x_inicial, y_final, x_final)
-    spdlog::info(a1->algoritmo_aStar(make_pair(3, 0), make_pair(3, 7), mapa));
-
-    // ---- Ejecutar Backtracking (y_inicial, x_inicial, x_final, y_final) 
-    vector<vector<int>> solution;  
-    if(a1->algoritmo_backtracking(1, 3, 7, 8, mapa, solution)){
-        spdlog::info(a1->ruta_backtracking());
-    }else{
-        spdlog::error("No hay solucion");
-    }
-
-    // ---- Ejecutar Bresenham (x_inicial, y_inicial, x_final, y_final)
-    spdlog::info(a1->algoritmo_bresenham(1,1,8,5));
 
     thread send;
     send = thread(game::checkUpdates);
@@ -79,7 +54,7 @@ string game::process_data(string data)
         }
         data.erase(0, 6);
         newBitMap(data);
-        spdlog::info(str_grid);
+        //spdlog::info(str_grid);
         return "";
     }
     else if (key == "player")
@@ -94,8 +69,83 @@ string game::process_data(string data)
         updateLevel(data);
         return "";
     }
+    else if (key == "algorithm")
+    {
+        data.erase(0, 10);
+        updateAlgorithm(data);
+        return "";
+    }
     spdlog::info("Client: {}", data);
     return data;
+}
+
+void game::updateAlgorithm(string data)
+{
+    string key = "";
+
+    int i = 0;
+    while (data[i] != ',')
+    {
+        key += data[i];
+        i++;
+    }
+    i++;
+
+    if (key == "aStar")
+    {
+        
+        string ID_ghost = "";
+        while (data[i] != ',')
+        {
+            ID_ghost += data[i];
+            i++;
+        }
+        i++;
+
+        // Enviar algoritmo
+        // spdlog::info(a1->algoritmo_aStar(make_pair(5, 8), make_pair(11, 23)));
+        // ---- Ejecutar A Star (y_inicial, x_inicial, y_final, x_final)
+        spdlog::info(a1->algoritmo_aStar(make_pair(p1->getPosY(), p1->getPosX()), 
+                                                make_pair(ghostList[stoi(ID_ghost)]->getPosY(), 
+                                                ghostList[stoi(ID_ghost)]->getPosX())));
+
+    }
+    else if (key == "bresenham")
+    {
+        
+        string ID_ghost = "";
+        while (data[i] != ',')
+        {
+            ID_ghost += data[i];
+            i++;
+        }
+        i++;
+
+        // ---- Ejecutar Bresenham (x_inicial, y_inicial, x_final, y_final)
+        //spdlog::info(a1->algoritmo_bresenham(1,1,8,5));
+        spdlog::info(a1->algoritmo_bresenham(p1->getPosX(), p1->getPosY(), 
+                                                ghostList[stoi(ID_ghost)]->getPosX(), 
+                                                ghostList[stoi(ID_ghost)]->getPosY()));
+    }else if (key == "backtracking")
+    {
+        
+        string ID_ghost = "";
+        while (data[i] != ',')
+        {
+            ID_ghost += data[i];
+            i++;
+        }
+        i++;
+
+        // ---- Ejecutar Backtracking (y_inicial, x_inicial, x_final, y_final) 
+        /*vector<vector<int>> solution;  
+        if(a1->algoritmo_backtracking(5, 8, 11, 5, mapa, solution)){
+            spdlog::info(a1->ruta_backtracking());
+        }else{
+            spdlog::error("No hay solucion");
+        }*/
+    }
+
 }
 
 void game::updateLevel(string data)
@@ -115,11 +165,27 @@ void game::updateLevel(string data)
         
         spdlog::info("Nivel 1");
 
+        // Crea los espectros
+        ghostList[1] = new grayGhost(1);
+        ghostList[2] = new grayGhost(2);
+        ghostList[3] = new grayGhost(3);
+
+        // Inicializa las posiciones
+
+        // Inicializa la poblacion inicial
         a1->setPopulation(a1->crearPoblacion());
 
-        spdlog::info("Poblacion Inicial");
-        a1->mostrarPoblacion(a1->getPopulation());
+        // Asigna los atributos a la poblacion inicial
+        int n_population = 0;
+        for (auto x : ghostList){
+            x.second->setSpeedPatrol(a1->getPopulation()[n_population][0]);
+            x.second->setSpeedPersec(a1->getPopulation()[n_population][1]);
+            x.second->setVisionRange(a1->getPopulation()[n_population][2]);
+            n_population += 1;
+        }
 
+        // Grid del mapa
+        //spdlog::info(str_grid);
 
     }else if (key == "2")
     {
@@ -127,28 +193,6 @@ void game::updateLevel(string data)
         
         a1->setPopulation(a1->evolucionar(a1->getPopulation(), 4, 4));
         spdlog::info("Poblacion Evolucionada");
-        a1->mostrarPoblacion(a1->getPopulation());
-    }else if (key == "3")
-    {
-        spdlog::info("Nivel 3");
-        
-        a1->setPopulation(a1->evolucionar(a1->getPopulation(), 5, 5));
-        spdlog::info("Poblacion Evolucionada");
-        a1->mostrarPoblacion(a1->getPopulation());
-    }else if (key == "4")
-    {
-        spdlog::info("Nivel 4");
-        
-        a1->setPopulation(a1->evolucionar(a1->getPopulation(), 6, 6));
-        spdlog::info("Poblacion Evolucionada");
-        a1->mostrarPoblacion(a1->getPopulation());
-    }else if (key == "5")
-    {
-        spdlog::info("Nivel 5");
-        
-        a1->setPopulation(a1->evolucionar(a1->getPopulation(), 7, 7));
-        spdlog::info("Poblacion Evolucionada");
-        a1->mostrarPoblacion(a1->getPopulation());
     }
     
 }
@@ -236,15 +280,18 @@ void game::newBitMap(string str_bitmap)
     /**
      * @note genera un string con el mapa de bits para representarlo en consola.
      */
+    
     str_grid = "Generado el mapa de bits del nivel:\n";
     for (int j = 0; j < sizeY; j++)
-    {
+    {   
         for (int i = 0; i < sizeX - 1; i++)
         {
             str_grid += to_string(grid[i][j]) + " ";
+            
         }
         str_grid += "\n";
     }
+
 }
 
 void game::deleteBitMap()
