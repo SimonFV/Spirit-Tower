@@ -11,27 +11,26 @@ using System;
 public class MainMenu : MonoBehaviour
 {
     public Text status;
-    TcpClient tcpClient;
-    public string ip = "127.0.0.1";
-    public int port = 54000;
 
     public void playGame()
     {
         status.text = "Conectandose al servidor...";
-        tcpClient = new TcpClient();
+        Client.Instance.ConnectTCP();
         try
         {
-            tcpClient.Connect(ip, port);
+            if (Client.Instance.getClient().Connected)
+            {
+                SceneManager.LoadScene(1);
+            }
+            else
+            {
+                status.text = "Servidor no encontrado.";
+            }
         }
         catch (SocketException)
         {
-            status.text = "Servidor no encontrado.";
+            status.text = "Error en la creación del socket.";
         }
-        if (tcpClient.Connected)
-        {
-            SceneManager.LoadScene(1);
-        }
-
     }
 
     public void quitGame()

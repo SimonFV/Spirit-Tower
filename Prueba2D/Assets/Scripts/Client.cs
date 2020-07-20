@@ -23,7 +23,7 @@ public class Client : MonoBehaviour
     public int port = 54000;
     public int listen_port = 52000;
 
-
+    private bool tcpIsConnected = false;
 
     public static Client Instance { get; private set; }
     void Awake()
@@ -41,18 +41,30 @@ public class Client : MonoBehaviour
     }
 
 
-    // Start is called before the first frame update
-    void Start()
+    // Conecta el cliente
+    public void ConnectTCP()
     {
-        receive_msg_tcp = "";
-        tcpClient = new TcpClient();
-        tcpClient.Connect(ip, port);
+        if (!tcpIsConnected)
+        {
+            try
+            {
+                receive_msg_tcp = "";
+                tcpClient = new TcpClient();
+                tcpClient.Connect(ip, port);
 
-        receive_msg_udp = "";
-        udpClientSend = new UdpClient();
-        udpClientSend.Connect(ip, port);
-        Thread receiveThread = new Thread(new ThreadStart(ReceivedUDP));
-        receiveThread.Start();
+                receive_msg_udp = "";
+                udpClientSend = new UdpClient();
+                udpClientSend.Connect(ip, port);
+                Thread receiveThread = new Thread(new ThreadStart(ReceivedUDP));
+                receiveThread.Start();
+                tcpIsConnected = true;
+            }
+            catch (SocketException)
+            {
+                Debug.Log("Error durante la conexión del socket.");
+            }
+        }
+
     }
 
     void OnDestroy()
@@ -115,9 +127,12 @@ public class Client : MonoBehaviour
 
     void FixedUpdate()
     {
-        //Set up async read
-        tcpStream = tcpClient.GetStream();
-        tcpStream.BeginRead(tcpBuffer, 0, tcpBuffer.Length, ReceivedTCP, null);
+        if (tcpIsConnected)
+        {
+            //Set up async read
+            tcpStream = tcpClient.GetStream();
+            tcpStream.BeginRead(tcpBuffer, 0, tcpBuffer.Length, ReceivedTCP, null);
+        }
     }
 
     void ReceivedTCP(IAsyncResult _result)
@@ -148,6 +163,11 @@ public class Client : MonoBehaviour
             }
 
         }
+    }
+
+    public TcpClient getClient()
+    {
+        return tcpClient;
     }
 
 }

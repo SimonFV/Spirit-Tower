@@ -54,7 +54,7 @@ string game::process_data(string data)
         }
         data.erase(0, 6);
         newBitMap(data);
-        //spdlog::info(str_grid);
+        spdlog::info(str_grid);
         return "";
     }
     else if (key == "player")
@@ -93,7 +93,7 @@ void game::updateAlgorithm(string data)
 
     if (key == "aStar")
     {
-        
+
         string ID_ghost = "";
         while (data[i] != ',')
         {
@@ -105,14 +105,13 @@ void game::updateAlgorithm(string data)
         // Enviar algoritmo
         // spdlog::info(a1->algoritmo_aStar(make_pair(5, 8), make_pair(11, 23)));
         // ---- Ejecutar A Star (y_inicial, x_inicial, y_final, x_final)
-        spdlog::info(a1->algoritmo_aStar(make_pair(p1->getPosY(), p1->getPosX()), 
-                                                make_pair(ghostList[stoi(ID_ghost)]->getPosY(), 
-                                                ghostList[stoi(ID_ghost)]->getPosX())));
-
+        spdlog::info(a1->algoritmo_aStar(make_pair(p1->getPosY(), p1->getPosX()),
+                                         make_pair(ghostList[stoi(ID_ghost)]->getPosY(),
+                                                   ghostList[stoi(ID_ghost)]->getPosX())));
     }
     else if (key == "bresenham")
     {
-        
+
         string ID_ghost = "";
         while (data[i] != ',')
         {
@@ -123,12 +122,13 @@ void game::updateAlgorithm(string data)
 
         // ---- Ejecutar Bresenham (x_inicial, y_inicial, x_final, y_final)
         //spdlog::info(a1->algoritmo_bresenham(1,1,8,5));
-        spdlog::info(a1->algoritmo_bresenham(p1->getPosX(), p1->getPosY(), 
-                                                ghostList[stoi(ID_ghost)]->getPosX(), 
-                                                ghostList[stoi(ID_ghost)]->getPosY()));
-    }else if (key == "backtracking")
+        spdlog::info(a1->algoritmo_bresenham(p1->getPosX(), p1->getPosY(),
+                                             ghostList[stoi(ID_ghost)]->getPosX(),
+                                             ghostList[stoi(ID_ghost)]->getPosY()));
+    }
+    else if (key == "backtracking")
     {
-        
+
         string ID_ghost = "";
         while (data[i] != ',')
         {
@@ -137,7 +137,7 @@ void game::updateAlgorithm(string data)
         }
         i++;
 
-        // ---- Ejecutar Backtracking (y_inicial, x_inicial, x_final, y_final) 
+        // ---- Ejecutar Backtracking (y_inicial, x_inicial, x_final, y_final)
         /*vector<vector<int>> solution;  
         if(a1->algoritmo_backtracking(5, 8, 11, 5, mapa, solution)){
             spdlog::info(a1->ruta_backtracking());
@@ -145,11 +145,10 @@ void game::updateAlgorithm(string data)
             spdlog::error("No hay solucion");
         }*/
     }
-
 }
 
 void game::updateLevel(string data)
-{        
+{
     string key = "";
 
     int i = 0;
@@ -161,8 +160,8 @@ void game::updateLevel(string data)
     i++;
 
     if (key == "1")
-    {   
-        
+    {
+
         spdlog::info("Nivel 1");
 
         // Crea los espectros
@@ -177,7 +176,8 @@ void game::updateLevel(string data)
 
         // Asigna los atributos a la poblacion inicial
         int n_population = 0;
-        for (auto x : ghostList){
+        for (auto x : ghostList)
+        {
             x.second->setSpeedPatrol(a1->getPopulation()[n_population][0]);
             x.second->setSpeedPersec(a1->getPopulation()[n_population][1]);
             x.second->setVisionRange(a1->getPopulation()[n_population][2]);
@@ -186,15 +186,14 @@ void game::updateLevel(string data)
 
         // Grid del mapa
         //spdlog::info(str_grid);
-
-    }else if (key == "2")
+    }
+    else if (key == "2")
     {
         spdlog::info("Nivel 2");
-        
+
         a1->setPopulation(a1->evolucionar(a1->getPopulation(), 4, 4));
         spdlog::info("Poblacion Evolucionada");
     }
-    
 }
 
 void game::updatePlayer(string data)
@@ -280,18 +279,16 @@ void game::newBitMap(string str_bitmap)
     /**
      * @note genera un string con el mapa de bits para representarlo en consola.
      */
-    
+
     str_grid = "Generado el mapa de bits del nivel:\n";
     for (int j = 0; j < sizeY; j++)
-    {   
+    {
         for (int i = 0; i < sizeX - 1; i++)
         {
             str_grid += to_string(grid[i][j]) + " ";
-            
         }
         str_grid += "\n";
     }
-
 }
 
 void game::deleteBitMap()

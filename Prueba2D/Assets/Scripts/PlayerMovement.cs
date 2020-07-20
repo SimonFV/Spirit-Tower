@@ -113,7 +113,7 @@ public class PlayerMovement : MonoBehaviour
 
         startPos = transform.position;
 
-        //Envía el mapa de bits del nivel actual al servidor.
+        //Crea el mapa de bits del nivel actual.
         createBitMap();
 
     }
