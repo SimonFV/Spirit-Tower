@@ -69,9 +69,9 @@ string game::process_data(string data)
         updateLevel(data);
         return "";
     }
-    else if (key == "algorithm")
+    else if (key == "dentroVision")
     {
-        data.erase(0, 10);
+        data.erase(0, 13);
         updateAlgorithm(data);
         return "";
     }
@@ -90,6 +90,33 @@ void game::updateAlgorithm(string data)
         i++;
     }
     i++;
+
+    spdlog::info("El espectro " + key + " detecto al jugador");
+    // Enviar ruta breadcrumbing
+    //server::getInstance()->sendMsgTcp(key+","+
+    //    to_string(p1->getPosX())+"-"+to_string(p1->getPosY()));
+
+    if (key == "0")
+    {   
+        // Espectro "key" -> enviar breadcrumbing
+        string msj_ruta = key+","+"-17"+"_"+"3"+"/"+"-17"+"_"+"7"+"/"+"-17"+"_"+"12"+"/";
+        server::getInstance()->sendMsgTcp(msj_ruta);
+
+        // A los otros espectros -> enviar aStar
+        key = "1";
+        msj_ruta = key+","+"0"+"_"+"0"+"/"+"0"+"_"+"7"+"/"+"0"+"_"+"12"+"/";
+        server::getInstance()->sendMsgUdp(msj_ruta);
+         
+    }else if (key == "1")
+    {
+        string msj_ruta = key+","+"0"+"_"+"0"+"/"+"0"+"_"+"7"+"/"+"0"+"_"+"12"+"/";
+        server::getInstance()->sendMsgTcp(msj_ruta);
+    }else if (key == "2")
+    {
+        string msj_ruta = key+","+"5"+"_"+"0"+"/"+"5"+"_"+"7"+"/"+"5"+"_"+"12"+"/";
+        server::getInstance()->sendMsgTcp(msj_ruta);
+    }
+
 
     if (key == "aStar")
     {

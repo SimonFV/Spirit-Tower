@@ -33,6 +33,15 @@ public class Patrulla : MonoBehaviour
 
     int waypointIndex = 0;
 
+    // Variables nuevas
+    public float changeTargetDistance = 0.1f;
+    public int currentTarget = 0;
+    public List<List<int>> lista_matriz = new List<List<int>>();
+    public List<int> lista_interna= new List<int>();
+    public static GameObject[] gameObjects;
+    public bool enviar_mensaje = true;
+
+    // Fin
 
     public void setFollow(bool value)
     {
@@ -69,9 +78,16 @@ public class Patrulla : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        
         rb = GetComponent<Rigidbody2D>();
         transform.position = waypoints[waypointIndex].transform.position;
+
+        // Se inicializa una ruta (Si no lanza error :) )
+        lista_interna.Add(0);
+        lista_interna.Add(0);
+        lista_matriz.Add(lista_interna);
+        
+        gameObjects = GameObject.FindGameObjectsWithTag("Enemy");
 
     }
 
@@ -108,12 +124,58 @@ public class Patrulla : MonoBehaviour
 
     }
 
+    private bool MoveRuta()
+    {
+	
+        Vector3 target = new Vector3(lista_matriz[currentTarget][0],lista_matriz[currentTarget][1],0);
+        Vector3 distanciaVector = target - transform.position;
+        if(distanciaVector.magnitude <= changeTargetDistance){
+            return true;
+        }
+
+        transform.position = Vector2.MoveTowards(transform.position,
+                                                    target,
+                                                    moveSpeed * Time.deltaTime);
+        return false;
+    }
+
+    private int GetNextTarget()
+    {
+
+        currentTarget++;
+        if(currentTarget >= lista_matriz.Count){
+            // Ya llego al objetivo 
+            currentTarget = 0;   
+        }
+
+        return currentTarget;
+    }
+
     private void Update()
     {
 
         if (follow)
         {
             Move();
+        }else{
+
+            if(enviar_mensaje){
+                // Enviar mensaje al cliente solicitando breadcrumbing y aStar
+                Debug.Log("Enviando mensaje");
+                Patrulla valor;
+                for(int i=0; i<3; i++){
+                    valor = gameObjects[i].GetComponent<Patrulla>();
+                    if(valor.follow==false && valor.enviar_mensaje==true){
+                        Client.Instance.sendMsgUDP("dentroVision,"+i+",");
+                    }
+                }
+
+                enviar_mensaje=false;
+            }
+        
+            if(MoveRuta()){
+                currentTarget = GetNextTarget();
+            }   
         }
 
         detected = false;
@@ -125,10 +187,13 @@ public class Patrulla : MonoBehaviour
             if (playerVector.magnitude < visionDistance)
             {
                 detected = true;
+                follow = false;
                 if (!this.GetComponent<SpriteRenderer>().enabled)
                 {
                     boxCollider.isTrigger = true;
                 }
+            }else{
+                //follow=true;
             }
 
         }
