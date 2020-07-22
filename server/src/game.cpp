@@ -99,12 +99,16 @@ void game::updateAlgorithm(string data)
     if (key == "0")
     {   
         // Espectro "key" -> enviar breadcrumbing
-        string msj_ruta = key+","+"-17"+"_"+"3"+"/"+"-17"+"_"+"7"+"/"+"-17"+"_"+"12"+"/";
-        server::getInstance()->sendMsgTcp(msj_ruta);
+        string msj_ruta = key+","+"-5"+"_"+"0"+"/"+"-5"+"_"+"7"+"/"+"-5"+"_"+"12"+"/";
+        server::getInstance()->sendMsgUdp(msj_ruta);
 
         // A los otros espectros -> enviar aStar
         key = "1";
         msj_ruta = key+","+"0"+"_"+"0"+"/"+"0"+"_"+"7"+"/"+"0"+"_"+"12"+"/";
+        server::getInstance()->sendMsgUdp(msj_ruta);
+
+        key = "2";
+        msj_ruta = key+","+"5"+"_"+"0"+"/"+"5"+"_"+"7"+"/"+"5"+"_"+"12"+"/";
         server::getInstance()->sendMsgUdp(msj_ruta);
          
     }else if (key == "1")

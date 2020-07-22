@@ -17,6 +17,7 @@ public class Client : MonoBehaviour
     private UdpClient udpClientSend;
     private TcpClient tcpClient;
     private byte[] tcpBuffer = new byte[4096];
+    public List<string> lista_msjs= new List<string>();
 
     private string receive_msg_tcp;
     private string receive_msg_udp;
@@ -106,26 +107,13 @@ public class Client : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {   
 
-        lock (objLockTCP)
-        {
-            if (!string.IsNullOrEmpty(receive_msg_tcp))
-            {
-                //Debug.Log(receive_msg_tcp);
-                procesarDatos(receive_msg_tcp);
-                receive_msg_tcp = "";
-            }
+        if(lista_msjs.Count != 0){
+            procesarDatos(lista_msjs[0]);
+            lista_msjs.RemoveAt(0);
         }
-        lock (objLockUDP)
-        {
-            if (!string.IsNullOrEmpty(receive_msg_udp))
-            {
-                //Debug.Log(receive_msg_udp);
-                procesarDatos(receive_msg_udp);
-                receive_msg_udp = "";
-            }
-        }
+        
     }
 
 
@@ -149,6 +137,7 @@ public class Client : MonoBehaviour
             lock (objLockTCP)
             {
                 receive_msg_tcp = Encoding.ASCII.GetString(tcpBuffer, 0, bytesIn);
+                lista_msjs.Add(receive_msg_tcp);
             }
         }
     }
@@ -164,6 +153,7 @@ public class Client : MonoBehaviour
             lock (objLockUDP)
             {
                 receive_msg_udp = Encoding.ASCII.GetString(receiveBytes);
+                lista_msjs.Add(receive_msg_udp);
             }
 
         }
