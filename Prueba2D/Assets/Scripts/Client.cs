@@ -37,9 +37,7 @@ public class Client : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-
     }
-
 
     // Conecta el cliente
     public void ConnectTCP()
@@ -67,6 +65,7 @@ public class Client : MonoBehaviour
 
     }
 
+
     void OnDestroy()
     {
         if (tcpClient.Connected)
@@ -80,50 +79,38 @@ public class Client : MonoBehaviour
     //Envía un mensaje por TCP
     public void sendMsgTCP(string send_msg)
     {
+        try
+        {
+            if (!tcpClient.Connected || string.IsNullOrEmpty(send_msg)) { return; }
 
-        if (!tcpClient.Connected || string.IsNullOrEmpty(send_msg)) { return; }
+            //Set up async read
+            var stream = tcpClient.GetStream();
 
-        //Set up async read
-        var stream = tcpClient.GetStream();
-
-        //send message
-        byte[] msg = Encoding.ASCII.GetBytes(send_msg);
-        stream.Write(msg, 0, msg.Length);
-
+            //send message
+            byte[] msg = Encoding.ASCII.GetBytes(send_msg);
+            stream.Write(msg, 0, msg.Length);
+        }
+        catch (Exception)
+        {
+            tcpIsConnected = false;
+            Pause.gameIsPaused = true;
+        }
     }
 
     //Envía un mensaje por UDP
     public void sendMsgUDP(string send_msg)
     {
-
-        Byte[] senddata = Encoding.ASCII.GetBytes(send_msg);
-        udpClientSend.Send(senddata, senddata.Length);
-
-    }
-
-
-    // Update is called once per frame
-    void Update()
-    {
-
-        lock (objLockTCP)
+        try
         {
-            if (!string.IsNullOrEmpty(receive_msg_tcp))
-            {
-                Debug.Log(receive_msg_tcp);
-                receive_msg_tcp = "";
-            }
+            Byte[] senddata = Encoding.ASCII.GetBytes(send_msg);
+            udpClientSend.Send(senddata, senddata.Length);
         }
-        lock (objLockUDP)
+        catch (Exception)
         {
-            if (!string.IsNullOrEmpty(receive_msg_udp))
-            {
-                Debug.Log(receive_msg_udp);
-                receive_msg_udp = "";
-            }
+            tcpIsConnected = false;
+            Pause.gameIsPaused = true;
         }
     }
-
 
     void FixedUpdate()
     {
@@ -145,6 +132,7 @@ public class Client : MonoBehaviour
             lock (objLockTCP)
             {
                 receive_msg_tcp = Encoding.ASCII.GetString(tcpBuffer, 0, bytesIn);
+                Debug.Log(receive_msg_tcp);
             }
         }
     }
@@ -160,6 +148,7 @@ public class Client : MonoBehaviour
             lock (objLockUDP)
             {
                 receive_msg_udp = Encoding.ASCII.GetString(receiveBytes);
+                Debug.Log(receive_msg_udp);
             }
 
         }

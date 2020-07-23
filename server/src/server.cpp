@@ -160,8 +160,12 @@ int server::receive_msg()
 
     if (socketCount == -1)
     {
-        spdlog::error("Error de conexión. Reiniciando...");
+        spdlog::error("Error en la conexion, reiniciando...");
         return -1;
+    }
+    if (socketCount == 0)
+    {
+        return 0;
     }
 
     /**
@@ -182,14 +186,14 @@ int server::receive_msg()
             return -1;
         }
         /**
-                 * @note Peticion del cliente.
-                 */
+         * @note Peticion del cliente.
+         */
         petition = string(buf, 0, bytesReceived);
     }
 
     /**
-             * @note Si el mensaje es desde UDP.
-             */
+     * @note Si el mensaje es desde UDP.
+     */
     if (FD_ISSET(clientSocket_udp, &copy))
     {
         memset(buf_udp, 0, 1024);
@@ -205,6 +209,7 @@ int server::receive_msg()
      * @note Procesa la petición del cliente y devuelve una respuesta si es necesario.
      */
     sendMsgTcp(game::getInstance()->process_data(petition));
+    petition = "";
 }
 
 void server::send_msg()
@@ -212,18 +217,14 @@ void server::send_msg()
     lock_guard<mutex> lock(access_send);
     if (is_msg_to_send)
     {
-        for (int i = 0; msg_send_udp[i] != "" &&
-                        i < sizeof(msg_send_udp) / sizeof(msg_send_udp[0]) - 1;
-             i++)
+        for (int i = 0; msg_send_udp[i] != "" && i < 79; i++)
         {
             sendto(clientSocket_udp, msg_send_udp[i].c_str(), msg_send_udp[i].size() + 1,
                    0, (sockaddr *)&udpGameServer, sizeof(udpGameServer));
             msg_send_udp[i] = "";
         }
 
-        for (int i = 0; msg_send_tcp[i] != "" &&
-                        i < sizeof(msg_send_tcp) / sizeof(msg_send_tcp[0]) - 1;
-             i++)
+        for (int i = 0; msg_send_tcp[i] != "" && i < 19; i++)
         {
             send(clientSocket_tcp, msg_send_tcp[i].c_str(), msg_send_tcp[i].size() + 1, 0);
             msg_send_tcp[i] = "";
@@ -238,7 +239,7 @@ void server::sendMsgTcp(string msg) const
     if (msg != "")
     {
         int i = 0;
-        while (msg_send_tcp[i] != "" && i < sizeof(msg_send_tcp) / sizeof(msg_send_tcp[0]) - 1)
+        while (msg_send_tcp[i] != "" && i < 19)
         {
             i++;
         }
@@ -253,7 +254,7 @@ void server::sendMsgUdp(string msg) const
     if (msg != "")
     {
         int i = 0;
-        while (msg_send_udp[i] != "" && i < sizeof(msg_send_udp) / sizeof(msg_send_udp[0]) - 1)
+        while (msg_send_udp[i] != "" && i < 79)
         {
             i++;
         }

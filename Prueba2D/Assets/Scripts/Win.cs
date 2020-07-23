@@ -6,23 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class Win : MonoBehaviour
 {
-    [SerializeField]
-    static int scene = 2;
+    public static int scene = 2;
 
     [SerializeField]
     BoxCollider2D boxCollider;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     void OnCollisionEnter2D(Collision2D collision)
     {

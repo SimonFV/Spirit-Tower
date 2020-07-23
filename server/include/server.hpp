@@ -54,7 +54,6 @@ private:
     int socketCount;
     sockaddr_in client_udp;
     socklen_t clientSize_udp;
-
     /**
      * Constructor de la clase server
      */

@@ -2,8 +2,8 @@
 #define GAME_H
 
 #include <server.hpp>
-#include <iterator> 
-#include <map> 
+#include <iterator>
+#include <map>
 #include <ghost.hpp>
 #include <player.hpp>
 #include <algorithms.hpp>
@@ -103,7 +103,7 @@ public:
 
 public:
     string getStrGrid() { return str_grid; }
-    int ** getMatrGrid() { return grid; }
+    int **getMatrGrid() { return grid; }
     int getSizeXMatr() { return sizeX; }
     int getSizeYMatr() { return sizeY; }
 };

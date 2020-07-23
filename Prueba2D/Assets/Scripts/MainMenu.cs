@@ -4,9 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Net.Sockets;
-using System.Net;
-using System.Text;
-using System;
 
 public class MainMenu : MonoBehaviour
 {
@@ -29,7 +26,7 @@ public class MainMenu : MonoBehaviour
         }
         catch (SocketException)
         {
-            status.text = "Error en la creación del socket.";
+            status.text = "Error en la creacion del socket.";
         }
     }
 

@@ -14,12 +14,19 @@ game *game::getInstance()
     return game_instance;
 }
 
-[[noreturn]] void game::checkUpdates()
+void game::checkUpdates()
 {
     while (true)
     {
-        server::getInstance()->send_msg();
-        nanosleep((const struct timespec[]){{0, 1000000L}}, NULL);
+        try
+        {
+            server::getInstance()->send_msg();
+            nanosleep((const struct timespec[]){{0, 1000000L}}, NULL);
+        }
+        catch (exception)
+        {
+            break;
+        }
     }
 }
 
@@ -34,7 +41,6 @@ void game::run_game() const
     {
         spdlog::error("Error en el servidor.");
     }
-
     send.join();
 }
 

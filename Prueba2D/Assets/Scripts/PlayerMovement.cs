@@ -60,6 +60,7 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField]
     private Tilemap tilemap;
+    private static Tilemap staticTilemap;
     private Vector3Int localPlace;
     private int[,] bitmap;
     private string string_bitmap;
@@ -110,7 +111,7 @@ public class PlayerMovement : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        staticTilemap = this.tilemap;
         startPos = transform.position;
 
         //Crea el mapa de bits del nivel actual.
@@ -276,5 +277,25 @@ public class PlayerMovement : MonoBehaviour
             }
             string_bitmap += "\n";
         }
+    }
+
+    public static int escaleToServerX(int _x)
+    {
+        return _x - staticTilemap.origin.x;
+    }
+
+    public static int escaleToServerY(int _y)
+    {
+        return _y - staticTilemap.origin.y;
+    }
+
+    public static int escaleToClientX(int _x)
+    {
+        return _x + staticTilemap.origin.x;
+    }
+
+    public static int escaleToClientY(int _y)
+    {
+        return _y + staticTilemap.origin.y;
     }
 }
