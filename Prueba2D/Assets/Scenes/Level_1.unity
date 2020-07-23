@@ -359,7 +359,7 @@ GameObject:
   - component: {fileID: 266066884}
   m_Layer: 0
   m_Name: Gris
-  m_TagString: Ghost1
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -386,6 +386,10 @@ MonoBehaviour:
   - {fileID: 1272516251}
   - {fileID: 540124267}
   moveSpeed: 3
+  changeTargetDistance: 0.1
+  currentTarget: 0
+  lista_interna: 
+  enviar_mensaje: 1
 --- !u!212 &266066881
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1956,6 +1960,10 @@ MonoBehaviour:
   - {fileID: 366163932}
   - {fileID: 96512586}
   moveSpeed: 2
+  changeTargetDistance: 0.1
+  currentTarget: 0
+  lista_interna: 
+  enviar_mensaje: 1
 --- !u!212 &949514462
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -32196,6 +32204,10 @@ MonoBehaviour:
   - {fileID: 1829720485}
   - {fileID: 2129876198}
   moveSpeed: 2
+  changeTargetDistance: 0.1
+  currentTarget: 0
+  lista_interna: 
+  enviar_mensaje: 1
 --- !u!212 &1833825073
 SpriteRenderer:
   m_ObjectHideFlags: 0
