@@ -9,7 +9,6 @@ public class Pause : MonoBehaviour
     public static bool gameIsPaused = false;
 
     public GameObject PauseMenu;
-    public Text status;
 
     // Update is called once per frame
     void Update()
@@ -26,7 +25,7 @@ public class Pause : MonoBehaviour
         Time.timeScale = 1f;
         gameIsPaused = false;
         Win.scene = 2;
-        SceneManager.LoadScene(0);
+        Application.Quit();
     }
 
     public void pause()

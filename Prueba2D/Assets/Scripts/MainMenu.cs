@@ -15,7 +15,7 @@ public class MainMenu : MonoBehaviour
         Client.Instance.ConnectTCP();
         try
         {
-            if (Client.Instance.getClient().Connected)
+            if (Client.Instance.isConnected())
             {
                 SceneManager.LoadScene(1);
             }

@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1158,7 +1158,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PauseMenu: {fileID: 1820195679}
-  status: {fileID: 1803411932}
 --- !u!1 &556181171
 GameObject:
   m_ObjectHideFlags: 0
@@ -2217,7 +2216,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: RECONECTAR
+  m_Text: SALIR
 --- !u!222 &1011436313
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -31920,7 +31919,7 @@ GameObject:
   - component: {fileID: 1803411933}
   - component: {fileID: 1803411932}
   m_Layer: 5
-  m_Name: Text
+  m_Name: PauseText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31958,7 +31957,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7042128, g: 1, b: 0.6273585, a: 1}
+  m_Color: {r: 1, g: 0.28949142, b: 0, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:

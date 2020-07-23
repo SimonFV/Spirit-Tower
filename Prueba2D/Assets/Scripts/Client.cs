@@ -68,7 +68,7 @@ public class Client : MonoBehaviour
 
     }
 
-
+    /*
     void OnDestroy()
     {
         if (tcpClient.Connected)
@@ -76,6 +76,7 @@ public class Client : MonoBehaviour
             tcpClient.Close();
         }
     }
+    */
 
 
 
@@ -181,6 +182,7 @@ public class Client : MonoBehaviour
         {
             key += data[i];
         }
+        //ERROR
         i++;
         data = data.Remove(0, i);
 
@@ -191,6 +193,7 @@ public class Client : MonoBehaviour
         i = 0;
         string valor_x;
         string valor_y;
+        //ERROR
         while (data.Length != 1) // El msj tiene un caracter extra¿?
         {
 
@@ -233,9 +236,9 @@ public class Client : MonoBehaviour
 
     }
 
-    public TcpClient getClient()
+    public bool isConnected()
     {
-        return tcpClient;
+        return tcpIsConnected;
     }
 
 }
