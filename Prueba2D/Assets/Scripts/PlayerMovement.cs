@@ -117,6 +117,22 @@ public class PlayerMovement : MonoBehaviour
         //Crea el mapa de bits del nivel actual.
         createBitMap();
 
+        // Crear las condiciones iniciales de cada nivel
+        Patrulla.gameObjects = GameObject.FindGameObjectsWithTag("Enemy");
+        String lista_espectros = "";
+        for(int i=0; i<Patrulla.gameObjects.Length; i++){
+            if(GameObject.Find("Gris") || GameObject.Find("Gris (1)") || GameObject.Find("Gris (2)")){
+                Debug.Log("Gris encontrado" + i);
+                // Crear espectro y asociar al server
+                lista_espectros += ",Gris";
+            }
+            else if(GameObject.Find("red") || GameObject.Find("red (1)") || GameObject.Find("red (2)")){
+                Debug.Log("Rojo encontrado" + i);
+                lista_espectros += ",Rojo";
+            }
+        }
+        Client.Instance.sendMsgUDP("level," + (Win.scene-1) + lista_espectros + "\n");
+
     }
 
     private void Awake()
@@ -215,8 +231,9 @@ public class PlayerMovement : MonoBehaviour
                 map_sent = false;
             }
             playerPos = grid.WorldToCell(rb.transform.position);
-            Client.Instance.sendMsgUDP("player,pos," + playerPos.x.ToString("0") + ","
-                                        + playerPos.y.ToString("0") + "\n");
+            Client.Instance.sendMsgUDP("player,pos," + 
+                                PlayerMovement.escaleToServerX(playerPos.x) + 
+                                "," + PlayerMovement.escaleToServerY(playerPos.y) + "\n");
         }
 
     }
@@ -279,22 +296,22 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public static int escaleToServerX(int _x)
+    public static float escaleToServerX(float _x)
     {
         return _x - staticTilemap.origin.x;
     }
 
-    public static int escaleToServerY(int _y)
+    public static float escaleToServerY(float _y)
     {
         return _y - staticTilemap.origin.y;
     }
 
-    public static int escaleToClientX(int _x)
+    public static float escaleToClientX(float _x)
     {
         return _x + staticTilemap.origin.x;
     }
 
-    public static int escaleToClientY(int _y)
+    public static float escaleToClientY(float _y)
     {
         return _y + staticTilemap.origin.y;
     }

@@ -60,7 +60,7 @@ string game::process_data(string data)
         }
         data.erase(0, 6);
         newBitMap(data);
-        spdlog::info(str_grid);
+        //spdlog::info(str_grid);
         return "";
     }
     else if (key == "player")
@@ -80,9 +80,69 @@ string game::process_data(string data)
         data.erase(0, 13);
         updateAlgorithm(data);
         return "";
+    }else if (key == "espectros")
+    {
+        data.erase(0, 10);
+        updateEspectros(data);
+        return "";
     }
     spdlog::info("Client: {}", data);
     return data;
+}
+
+void game::updateEspectros(string data)
+{
+    string key = "";
+
+    int i = 0;
+    while (data[i] != ',')
+    {
+        key += data[i];
+        i++;
+    }
+    i++;
+    if (key == "pos")
+    {
+
+        key = "";
+        
+        while (data[i] != ',')
+        {
+            key += data[i];
+            i++;
+        }
+        i++;
+
+        string posX = "";
+        string posY = "";
+        bool parada = false;
+        while (data[i] != ',')
+        {   
+            if(data[i] != '.' && parada == false){
+                posX += data[i];
+            }else{
+                parada = true;
+            }
+            i++;
+        }
+        i++;
+        parada = false;
+        while (data[i] != '\n')
+        {
+            if(data[i] != '.' && parada == false){
+                posY += data[i];
+            }else{
+                parada = true;
+            }
+            i++;
+        }
+    
+        ghostList[stoi(key)]->moveGhostTo(stoi(posX), stoi(posY));
+        spdlog::info("Posición del Espectro: [ x = {}, y = {} ]", 
+                                                ghostList[stoi(key)]->getPosX(), 
+                                                ghostList[stoi(key)]->getPosY());
+        
+    }
 }
 
 void game::updateAlgorithm(string data)
@@ -119,25 +179,34 @@ void game::updateAlgorithm(string data)
          
     }else if (key == "1")
     {
-        string msj_ruta = key+","+"0"+"_"+"0"+"/"+"0"+"_"+"7"+"/"+"0"+"_"+"12"+"/";
-        server::getInstance()->sendMsgTcp(msj_ruta);
+        string msj_ruta = key+","+"-5"+"_"+"0"+"/"+"-5"+"_"+"7"+"/"+"-5"+"_"+"12"+"/";
+        server::getInstance()->sendMsgUdp(msj_ruta);
+
+        // A los otros espectros -> enviar aStar
+        key = "0";
+        msj_ruta = key+","+"0"+"_"+"0"+"/"+"0"+"_"+"7"+"/"+"0"+"_"+"12"+"/";
+        server::getInstance()->sendMsgUdp(msj_ruta);
+
+        key = "2";
+        msj_ruta = key+","+"5"+"_"+"0"+"/"+"5"+"_"+"7"+"/"+"5"+"_"+"12"+"/";
+        server::getInstance()->sendMsgUdp(msj_ruta);
+
     }else if (key == "2")
     {
-        string msj_ruta = key+","+"5"+"_"+"0"+"/"+"5"+"_"+"7"+"/"+"5"+"_"+"12"+"/";
-        server::getInstance()->sendMsgTcp(msj_ruta);
+        string msj_ruta = key+","+"-5"+"_"+"0"+"/"+"-5"+"_"+"7"+"/"+"-5"+"_"+"12"+"/";
+        server::getInstance()->sendMsgUdp(msj_ruta);
+
+        // A los otros espectros -> enviar aStar
+        key = "0";
+        msj_ruta = key+","+"0"+"_"+"0"+"/"+"0"+"_"+"7"+"/"+"0"+"_"+"12"+"/";
+        server::getInstance()->sendMsgUdp(msj_ruta);
+
+        key = "1";
+        msj_ruta = key+","+"5"+"_"+"0"+"/"+"5"+"_"+"7"+"/"+"5"+"_"+"12"+"/";
+        server::getInstance()->sendMsgUdp(msj_ruta);
     }
 
-
-    if (key == "aStar")
-    {
-
-        string ID_ghost = "";
-        while (data[i] != ',')
-        {
-            ID_ghost += data[i];
-            i++;
-        }
-        i++;
+    /*
 
         // Enviar algoritmo
         // spdlog::info(a1->algoritmo_aStar(make_pair(5, 8), make_pair(11, 23)));
@@ -145,43 +214,29 @@ void game::updateAlgorithm(string data)
         spdlog::info(a1->algoritmo_aStar(make_pair(p1->getPosY(), p1->getPosX()),
                                          make_pair(ghostList[stoi(ID_ghost)]->getPosY(),
                                                    ghostList[stoi(ID_ghost)]->getPosX())));
-    }
-    else if (key == "bresenham")
-    {
+    */
 
-        string ID_ghost = "";
-        while (data[i] != ',')
-        {
-            ID_ghost += data[i];
-            i++;
-        }
-        i++;
 
+    /*
         // ---- Ejecutar Bresenham (x_inicial, y_inicial, x_final, y_final)
         //spdlog::info(a1->algoritmo_bresenham(1,1,8,5));
         spdlog::info(a1->algoritmo_bresenham(p1->getPosX(), p1->getPosY(),
                                              ghostList[stoi(ID_ghost)]->getPosX(),
                                              ghostList[stoi(ID_ghost)]->getPosY()));
-    }
-    else if (key == "backtracking")
-    {
-
-        string ID_ghost = "";
-        while (data[i] != ',')
-        {
-            ID_ghost += data[i];
-            i++;
-        }
-        i++;
-
+    
+    */
+    
+    
+    /*
         // ---- Ejecutar Backtracking (y_inicial, x_inicial, x_final, y_final)
-        /*vector<vector<int>> solution;  
+        vector<vector<int>> solution;  
         if(a1->algoritmo_backtracking(5, 8, 11, 5, mapa, solution)){
             spdlog::info(a1->ruta_backtracking());
         }else{
             spdlog::error("No hay solucion");
-        }*/
-    }
+        }
+    */
+
 }
 
 void game::updateLevel(string data)
@@ -198,15 +253,12 @@ void game::updateLevel(string data)
 
     if (key == "1")
     {
-
         spdlog::info("Nivel 1");
 
         // Crea los espectros
+        ghostList[0] = new grayGhost(0);
         ghostList[1] = new grayGhost(1);
         ghostList[2] = new grayGhost(2);
-        ghostList[3] = new grayGhost(3);
-
-        // Inicializa las posiciones
 
         // Inicializa la poblacion inicial
         a1->setPopulation(a1->crearPoblacion());
@@ -221,13 +273,20 @@ void game::updateLevel(string data)
             n_population += 1;
         }
 
-        // Grid del mapa
-        //spdlog::info(str_grid);
     }
     else if (key == "2")
     {
         spdlog::info("Nivel 2");
 
+        // Vaciar hashmap del nivel 1
+        ghostList.clear(); 
+        // Eliminar las instancias de los espectros del nivel 1
+
+        // Crea los nuevos espectros
+        ghostList[0] = new redGhost(0);
+        ghostList[1] = new redGhost(1);
+        ghostList[2] = new redGhost(2);
+    
         a1->setPopulation(a1->evolucionar(a1->getPopulation(), 4, 4));
         spdlog::info("Poblacion Evolucionada");
     }

@@ -48,6 +48,12 @@ public:
             visionRange = visionRange_nuevo;
         }
 
+        void moveGhostTo(int x, int y)
+        {
+            position[0] = x;
+            position[1] = y;
+        }
+
     public:
         int getSpeedPatrol() { return speedPatrol; }
         int getSpeedPersec() { return speedPersec; }

@@ -86,8 +86,6 @@ public class Patrulla : MonoBehaviour
         lista_interna.Add(0);
         lista_interna.Add(0);
         lista_matriz.Add(lista_interna);
-        
-        gameObjects = GameObject.FindGameObjectsWithTag("Enemy");
 
     }
 
@@ -160,7 +158,18 @@ public class Patrulla : MonoBehaviour
         }else{
 
             if(enviar_mensaje){
-                // Enviar mensaje al cliente solicitando breadcrumbing y aStar
+
+                // Enviar posiciones de los espectros
+                for(int i=0; i<3; i++){
+                    Client.Instance.sendMsgUDP("espectros,pos," + i + "," +
+                        PlayerMovement.escaleToServerX(gameObjects[i].GetComponent<Patrulla>().transform.position.x) +
+                        "," +
+                        PlayerMovement.escaleToServerY(gameObjects[i].GetComponent<Patrulla>().transform.position.y) +
+                        "\n"
+                        );
+                }                  
+
+                // Solicitar breadcrumbing y aStar
                 Debug.Log("Enviando mensaje");
                 Patrulla valor;
                 for(int i=0; i<3; i++){

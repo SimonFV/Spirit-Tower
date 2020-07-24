@@ -95,6 +95,7 @@ public:
      * @return String con el dato de la petición
      */
     string process_data(string data);
+    void updateEspectros(string data);
     void updateAlgorithm(string data);
     void updateLevel(string data);
     void updatePlayer(string data);
