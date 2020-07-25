@@ -187,91 +187,88 @@ void game::updateAlgorithm(string data)
     i++;
 
     spdlog::info("El espectro " + key + " detecto al jugador");
-    // Enviar ruta breadcrumbing
-    //server::getInstance()->sendMsgTcp(key+","+
-    //    to_string(p1->getPosX())+"-"+to_string(p1->getPosY()));
 
     if (key == "0")
-    {
-        // Espectro "key" -> enviar breadcrumbing
-        string msj_ruta = key + "," + "9" + "_" + "18" + "/" + "9" + "_" + "12" + "/" + "9" + "_" + "6" + "/";
-        server::getInstance()->sendMsgUdp(msj_ruta);
+    {   
+        string msj_ruta;
 
         // A los otros espectros -> enviar aStar
         // ---- Ejecutar A Star (y_inicial, x_inicial, y_final, x_final)
+        int mover_a;
+        for(int i=0; i<3; i++){
 
-        // Espectro 1
-        spdlog::info(ghostList[1]->getPosX());
-        spdlog::info(ghostList[1]->getPosY());
-        spdlog::info(p1->getPosX());
-        spdlog::info(p1->getPosY());
-        string aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[1]->getPosY(),
-                                                       ghostList[1]->getPosX()),
-                                             make_pair(p1->getPosY(),
-                                                       p1->getPosX()));
-        if (aStar_1 == "Source is invalid")
-        {
-            aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[1]->getPosY() + 1,
-                                                    ghostList[1]->getPosX()),
-                                          make_pair(p1->getPosY(),
-                                                    p1->getPosX()));
-            msj_ruta = "1," + aStar_1;
-            server::getInstance()->sendMsgUdp(msj_ruta);
-        }
-        else if (aStar_1 == "Destination is invalid")
-        {
-        }
-        else if (aStar_1 == "Source or the destination is blocked")
-        {
-            aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[1]->getPosY() + 1,
-                                                    ghostList[1]->getPosX()),
-                                          make_pair(p1->getPosY(),
-                                                    p1->getPosX()));
-            if (aStar_1 == "Source or the destination is blocked")
+            mover_a = i;
+            spdlog::info(ghostList[mover_a]->getPosX());
+            spdlog::info(ghostList[mover_a]->getPosY());
+            spdlog::info(p1->getPosX());
+            spdlog::info(p1->getPosY());
+            string aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[mover_a]->getPosY(),
+                                                        ghostList[mover_a]->getPosX()),
+                                                make_pair(p1->getPosY(),
+                                                        p1->getPosX()));
+            if (aStar_1 == "Source is invalid")
             {
-                aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[1]->getPosY() - 1,
-                                                        ghostList[1]->getPosX()),
-                                              make_pair(p1->getPosY(),
+                aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[mover_a]->getPosY() + 1,
+                                                        ghostList[mover_a]->getPosX()),
+                                            make_pair(p1->getPosY(),
+                                                        p1->getPosX()));
+                msj_ruta = to_string(mover_a) + "," + aStar_1;
+                server::getInstance()->sendMsgUdp(msj_ruta);
+            }
+            else if (aStar_1 == "Destination is invalid")
+            {
+                aStar_1 = "Error";
+            }
+            else if (aStar_1 == "Source or the destination is blocked")
+            {
+                aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[mover_a]->getPosY() + 1,
+                                                        ghostList[mover_a]->getPosX()),
+                                            make_pair(p1->getPosY(),
                                                         p1->getPosX()));
                 if (aStar_1 == "Source or the destination is blocked")
                 {
-                    aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[1]->getPosY() + 1,
-                                                            ghostList[1]->getPosX() - 1),
-                                                  make_pair(p1->getPosY(),
+                    aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[mover_a]->getPosY() - 1,
+                                                            ghostList[mover_a]->getPosX()),
+                                                make_pair(p1->getPosY(),
                                                             p1->getPosX()));
-                    msj_ruta = "1," + aStar_1;
-                    server::getInstance()->sendMsgUdp(msj_ruta);
+                    if (aStar_1 == "Source or the destination is blocked")
+                    {
+                        aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[mover_a]->getPosY() + 1,
+                                                                ghostList[mover_a]->getPosX() - 1),
+                                                    make_pair(p1->getPosY(),
+                                                                p1->getPosX()));
+                        msj_ruta = to_string(mover_a) + "," + aStar_1;
+                        server::getInstance()->sendMsgUdp(msj_ruta);
+                    }
+                    else
+                    {
+                        msj_ruta = to_string(mover_a) + "," + aStar_1;
+                        server::getInstance()->sendMsgUdp(msj_ruta);
+                    }
                 }
                 else
                 {
-                    msj_ruta = "1," + aStar_1;
+                    msj_ruta = to_string(mover_a) + "," + aStar_1;
                     server::getInstance()->sendMsgUdp(msj_ruta);
                 }
             }
+            else if (aStar_1 == "We are already at the destination")
+            {
+                aStar_1 = "Error";
+            }
+            else if (aStar_1 == "No encontrado")
+            {
+                aStar_1 = "Error";
+            }
             else
             {
-                msj_ruta = "1," + aStar_1;
+                msj_ruta = to_string(mover_a) + "," + aStar_1;
                 server::getInstance()->sendMsgUdp(msj_ruta);
             }
         }
-        else if (aStar_1 == "We are already at the destination")
-        {
-        }
-        else if (aStar_1 == "No encontrado")
-        {
-        }
-        else
-        {
-            msj_ruta = "1," + aStar_1;
-            server::getInstance()->sendMsgUdp(msj_ruta);
-        }
 
-        // Espectro 2
-        //key = "2";
-        //msj_ruta = key+","+"5"+"_"+"0"+"/"+"5"+"_"+"7"+"/"+"5"+"_"+"12"+"/";
-        //server::getInstance()->sendMsgUdp(msj_ruta);
     }
-    else if (key == "1")
+    /*else if (key == "1")
     {
         string msj_ruta = key + "," + "-5" + "_" + "0" + "/" + "-5" + "_" + "7" + "/" + "-5" + "_" + "12" + "/";
         server::getInstance()->sendMsgUdp(msj_ruta);
@@ -298,7 +295,7 @@ void game::updateAlgorithm(string data)
         key = "1";
         msj_ruta = key + "," + "5" + "_" + "0" + "/" + "5" + "_" + "7" + "/" + "5" + "_" + "12" + "/";
         server::getInstance()->sendMsgUdp(msj_ruta);
-    }
+    }*/
 
     /*
         // ---- Ejecutar Bresenham (x_inicial, y_inicial, x_final, y_final)
