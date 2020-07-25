@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Patrulla : MonoBehaviour
 {
+    [SerializeField]
+    private Grid grid;
 
     [SerializeField]
     Transform player;
