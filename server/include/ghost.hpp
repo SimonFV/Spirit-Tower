@@ -32,35 +32,35 @@ public:
     friend class redGhost;
     friend class blueGhost;
 
-    public:
-        void setSpeedPatrol(int speedPatrol_nuevo)
-        {
-            speedPatrol = speedPatrol_nuevo;
-        }
+public:
+    void setSpeedPatrol(int speedPatrol_nuevo)
+    {
+        speedPatrol = speedPatrol_nuevo;
+    }
 
-        void setSpeedPersec(int speedPersec_nuevo)
-        {
-            speedPersec = speedPersec_nuevo;
-        }
+    void setSpeedPersec(int speedPersec_nuevo)
+    {
+        speedPersec = speedPersec_nuevo;
+    }
 
-        void setVisionRange(int visionRange_nuevo)
-        {
-            visionRange = visionRange_nuevo;
-        }
+    void setVisionRange(int visionRange_nuevo)
+    {
+        visionRange = visionRange_nuevo;
+    }
 
-        void moveGhostTo(int x, int y)
-        {
-            position[0] = x;
-            position[1] = y;
-        }
+    void moveGhostTo(int x, int y)
+    {
+        position[0] = x;
+        position[1] = y;
+    }
 
-    public:
-        int getSpeedPatrol() { return speedPatrol; }
-        int getSpeedPersec() { return speedPersec; }
-        int getVisionRange() { return visionRange; }
+public:
+    int getSpeedPatrol() { return speedPatrol; }
+    int getSpeedPersec() { return speedPersec; }
+    int getVisionRange() { return visionRange; }
 
-        int getPosX() { return position[0]; }
-        int getPosY() { return position[1]; }
+    int getPosX() { return position[0]; }
+    int getPosY() { return position[1]; }
 };
 
 class grayGhost : public ghost

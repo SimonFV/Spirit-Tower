@@ -163,10 +163,12 @@ public class PlayerMovement : MonoBehaviour
                 {
                     usingBlade = true;
                 }
+                Client.Instance.sendMsgTCP("weapon,1");
             }
             else
             {
                 usingBlade = false;
+                Client.Instance.sendMsgTCP("weapon,0");
             }
         }
 
@@ -183,10 +185,12 @@ public class PlayerMovement : MonoBehaviour
                 {
                     usingShield = true;
                 }
+                Client.Instance.sendMsgTCP("weapon,2");
             }
             else
             {
                 usingShield = false;
+                Client.Instance.sendMsgTCP("weapon,0");
             }
         }
 

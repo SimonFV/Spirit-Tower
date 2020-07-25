@@ -80,10 +80,34 @@ string game::process_data(string data)
         data.erase(0, 13);
         updateAlgorithm(data);
         return "";
-    }else if (key == "espectros")
+    }
+    else if (key == "espectros")
     {
         data.erase(0, 10);
         updateEspectros(data);
+        return "";
+    }
+    else if (key == "cofrenada")
+    {
+        spdlog::info("Cofre abierto: Vacio.");
+        return "";
+    }
+    else if (key == "cofrellave")
+    {
+        spdlog::info("Cofre abierto: Llave adquirida.");
+        ;
+        return "";
+    }
+    else if (key == "weapon")
+    {
+        data.erase(0, 7);
+        updateWeapon(data);
+        return "";
+    }
+    else if (key == "mele")
+    {
+        data.erase(0, 5);
+        updateMele(data);
         return "";
     }
     spdlog::info("Client: {}", data);
@@ -105,7 +129,7 @@ void game::updateEspectros(string data)
     {
 
         key = "";
-        
+
         while (data[i] != ',')
         {
             key += data[i];
@@ -117,10 +141,13 @@ void game::updateEspectros(string data)
         string posY = "";
         bool parada = false;
         while (data[i] != ',')
-        {   
-            if(data[i] != '.' && parada == false){
+        {
+            if (data[i] != '.' && parada == false)
+            {
                 posX += data[i];
-            }else{
+            }
+            else
+            {
                 parada = true;
             }
             i++;
@@ -129,19 +156,21 @@ void game::updateEspectros(string data)
         parada = false;
         while (data[i] != '\n')
         {
-            if(data[i] != '.' && parada == false){
+            if (data[i] != '.' && parada == false)
+            {
                 posY += data[i];
-            }else{
+            }
+            else
+            {
                 parada = true;
             }
             i++;
         }
-    
+
         ghostList[stoi(key)]->moveGhostTo(stoi(posX), stoi(posY));
-        spdlog::info("Posición del Espectro: [ x = {}, y = {} ]", 
-                                                ghostList[stoi(key)]->getPosX(), 
-                                                ghostList[stoi(key)]->getPosY());
-        
+        spdlog::info("Posición del Espectro: [ x = {}, y = {} ]",
+                     ghostList[stoi(key)]->getPosX(),
+                     ghostList[stoi(key)]->getPosY());
     }
 }
 
@@ -163,9 +192,9 @@ void game::updateAlgorithm(string data)
     //    to_string(p1->getPosX())+"-"+to_string(p1->getPosY()));
 
     if (key == "0")
-    {   
+    {
         // Espectro "key" -> enviar breadcrumbing
-        string msj_ruta = key+","+"9"+"_"+"18"+"/"+"9"+"_"+"12"+"/"+"9"+"_"+"6"+"/";
+        string msj_ruta = key + "," + "9" + "_" + "18" + "/" + "9" + "_" + "12" + "/" + "9" + "_" + "6" + "/";
         server::getInstance()->sendMsgUdp(msj_ruta);
 
         // A los otros espectros -> enviar aStar
@@ -176,60 +205,62 @@ void game::updateAlgorithm(string data)
         spdlog::info(ghostList[1]->getPosY());
         spdlog::info(p1->getPosX());
         spdlog::info(p1->getPosY());
-        string aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[1]->getPosY(), 
-                                                        ghostList[1]->getPosX()),
-                                                            make_pair(p1->getPosY(),
-                                                                p1->getPosX()));
-        if(aStar_1 == "Source is invalid"){
-
-        }else if(aStar_1 == "Destination is invalid"){
-
-        }else if(aStar_1 == "Source or the destination is blocked"){
-
-        }else if(aStar_1 == "We are already at the destination"){
-
-        }else if(aStar_1 == "No encontrado"){
-
-        }else{
+        string aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[1]->getPosY(),
+                                                       ghostList[1]->getPosX()),
+                                             make_pair(p1->getPosY(),
+                                                       p1->getPosX()));
+        if (aStar_1 == "Source is invalid")
+        {
+        }
+        else if (aStar_1 == "Destination is invalid")
+        {
+        }
+        else if (aStar_1 == "Source or the destination is blocked")
+        {
+        }
+        else if (aStar_1 == "We are already at the destination")
+        {
+        }
+        else if (aStar_1 == "No encontrado")
+        {
+        }
+        else
+        {
             msj_ruta = "1," + aStar_1;
             server::getInstance()->sendMsgUdp(msj_ruta);
         }
-
 
         // Espectro 2
         //key = "2";
         //msj_ruta = key+","+"5"+"_"+"0"+"/"+"5"+"_"+"7"+"/"+"5"+"_"+"12"+"/";
         //server::getInstance()->sendMsgUdp(msj_ruta);
-
-
-         
-    }else if (key == "1")
+    }
+    else if (key == "1")
     {
-        string msj_ruta = key+","+"-5"+"_"+"0"+"/"+"-5"+"_"+"7"+"/"+"-5"+"_"+"12"+"/";
+        string msj_ruta = key + "," + "-5" + "_" + "0" + "/" + "-5" + "_" + "7" + "/" + "-5" + "_" + "12" + "/";
         server::getInstance()->sendMsgUdp(msj_ruta);
 
         // A los otros espectros -> enviar aStar
         key = "0";
-        msj_ruta = key+","+"0"+"_"+"0"+"/"+"0"+"_"+"7"+"/"+"0"+"_"+"12"+"/";
+        msj_ruta = key + "," + "0" + "_" + "0" + "/" + "0" + "_" + "7" + "/" + "0" + "_" + "12" + "/";
         server::getInstance()->sendMsgUdp(msj_ruta);
 
         key = "2";
-        msj_ruta = key+","+"5"+"_"+"0"+"/"+"5"+"_"+"7"+"/"+"5"+"_"+"12"+"/";
+        msj_ruta = key + "," + "5" + "_" + "0" + "/" + "5" + "_" + "7" + "/" + "5" + "_" + "12" + "/";
         server::getInstance()->sendMsgUdp(msj_ruta);
-
-
-    }else if (key == "2")
+    }
+    else if (key == "2")
     {
-        string msj_ruta = key+","+"-5"+"_"+"0"+"/"+"-5"+"_"+"7"+"/"+"-5"+"_"+"12"+"/";
+        string msj_ruta = key + "," + "-5" + "_" + "0" + "/" + "-5" + "_" + "7" + "/" + "-5" + "_" + "12" + "/";
         server::getInstance()->sendMsgUdp(msj_ruta);
 
         // A los otros espectros -> enviar aStar
         key = "0";
-        msj_ruta = key+","+"0"+"_"+"0"+"/"+"0"+"_"+"7"+"/"+"0"+"_"+"12"+"/";
+        msj_ruta = key + "," + "0" + "_" + "0" + "/" + "0" + "_" + "7" + "/" + "0" + "_" + "12" + "/";
         server::getInstance()->sendMsgUdp(msj_ruta);
 
         key = "1";
-        msj_ruta = key+","+"5"+"_"+"0"+"/"+"5"+"_"+"7"+"/"+"5"+"_"+"12"+"/";
+        msj_ruta = key + "," + "5" + "_" + "0" + "/" + "5" + "_" + "7" + "/" + "5" + "_" + "12" + "/";
         server::getInstance()->sendMsgUdp(msj_ruta);
     }
 
@@ -241,8 +272,7 @@ void game::updateAlgorithm(string data)
                                              ghostList[stoi(ID_ghost)]->getPosY()));
     
     */
-    
-    
+
     /*
         // ---- Ejecutar Backtracking (y_inicial, x_inicial, x_final, y_final)
         vector<vector<int>> solution;  
@@ -252,7 +282,6 @@ void game::updateAlgorithm(string data)
             spdlog::error("No hay solucion");
         }
     */
-
 }
 
 void game::updateLevel(string data)
@@ -288,23 +317,64 @@ void game::updateLevel(string data)
             x.second->setVisionRange(a1->getPopulation()[n_population][2]);
             n_population += 1;
         }
-
     }
     else if (key == "2")
     {
         spdlog::info("Nivel 2");
 
         // Vaciar hashmap del nivel 1
-        ghostList.clear(); 
+        ghostList.clear();
         // Eliminar las instancias de los espectros del nivel 1
 
         // Crea los nuevos espectros
         ghostList[0] = new redGhost(0);
         ghostList[1] = new redGhost(1);
         ghostList[2] = new redGhost(2);
-    
+
         a1->setPopulation(a1->evolucionar(a1->getPopulation(), 4, 4));
         spdlog::info("Poblacion Evolucionada");
+    }
+    else if (key == "3")
+    {
+        spdlog::info("Nivel 3");
+
+        // Vaciar hashmap del nivel 1
+        ghostList.clear();
+        // Eliminar las instancias de los espectros del nivel 1
+
+        // Crea los nuevos espectros
+        ghostList[0] = new blueGhost(0);
+        ghostList[1] = new blueGhost(1);
+        ghostList[2] = new blueGhost(2);
+
+        a1->setPopulation(a1->evolucionar(a1->getPopulation(), 5, 5));
+        spdlog::info("Poblacion Evolucionada");
+    }
+    else if (key == "4")
+    {
+        spdlog::info("Nivel 4");
+
+        // Vaciar hashmap del nivel 1
+        ghostList.clear();
+        // Eliminar las instancias de los espectros del nivel 1
+
+        // Crea los nuevos espectros
+        ghostList[0] = new grayGhost(0);
+        ghostList[1] = new redGhost(1);
+        ghostList[2] = new blueGhost(2);
+
+        a1->setPopulation(a1->evolucionar(a1->getPopulation(), 6, 6));
+        spdlog::info("Poblacion Evolucionada");
+    }
+    else if (key == "5")
+    {
+        spdlog::info("Nivel 5");
+
+        // Vaciar hashmap del nivel 1
+        ghostList.clear();
+        // Eliminar las instancias de los espectros del nivel 1
+
+        spdlog::info("Creando el jefe final.");
     }
 }
 
@@ -412,5 +482,33 @@ void game::deleteBitMap()
     if (sizeY > 0)
     {
         delete[] grid;
+    }
+}
+
+void game::updateWeapon(string data)
+{
+    if (data == "0")
+    {
+        spdlog::info("Sin armas.");
+    }
+    else if (data == "1")
+    {
+        spdlog::info("Utilizando la espada.");
+    }
+    else
+    {
+        spdlog::info("Utilizando el escudo.");
+    }
+}
+
+void game::updateMele(string data)
+{
+    if (data == "ghost")
+    {
+        spdlog::info("Atacando jugador.");
+    }
+    else if (data == "player")
+    {
+        spdlog::info("Atacando espectro.");
     }
 }

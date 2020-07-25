@@ -68,7 +68,7 @@ public class Client : MonoBehaviour
 
     }
 
-    /*
+
     void OnDestroy()
     {
         if (tcpClient.Connected)
@@ -76,7 +76,7 @@ public class Client : MonoBehaviour
             tcpClient.Close();
         }
     }
-    */
+
 
 
 

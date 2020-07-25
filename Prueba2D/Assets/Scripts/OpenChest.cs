@@ -5,17 +5,17 @@ using UnityEngine.UI;
 
 public class OpenChest : MonoBehaviour
 {
-	[SerializeField]
-	Animator animator;
-	[SerializeField]
-	BoxCollider2D boxCollider;
+    [SerializeField]
+    Animator animator;
+    [SerializeField]
+    BoxCollider2D boxCollider;
 
-	static int contador;
+    static int contador;
 
     [SerializeField]
     Text text;
 
-    IEnumerator waiter()  
+    IEnumerator waiter()
     {
         text.enabled = true;
 
@@ -34,21 +34,22 @@ public class OpenChest : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-		animator.SetBool("Collition", true);
+        animator.SetBool("Collition", true);
 
         if (contador == 3)
         {
-            if (!collision.gameObject.GetComponent<PlayerMovement>().getKey()) 
-            { 
+            if (!collision.gameObject.GetComponent<PlayerMovement>().getKey())
+            {
                 collision.gameObject.GetComponent<PlayerMovement>().setKey(true);
+                Client.Instance.sendMsgTCP("cofrellave,");
                 //contador = 0;
                 StartCoroutine(waiter());
             }
         }
         else
         {
-
-        contador++;
+            Client.Instance.sendMsgTCP("cofrenada,");
+            contador++;
 
         }
 

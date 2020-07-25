@@ -35,7 +35,7 @@ public class Bottle_Life : MonoBehaviour
             boxCollider.isTrigger = true;
             this.GetComponent<SpriteRenderer>().enabled = false;
 
-
+            Client.Instance.sendMsgTCP("player,life," + player.getLife().ToString() + "\n");
         }
 
     }

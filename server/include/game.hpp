@@ -101,9 +101,14 @@ public:
     void updatePlayer(string data);
     void newBitMap(string str_bitmap);
     void deleteBitMap();
+    void updateWeapon(string data);
+    void updateMele(string data);
 
 public:
-    string getStrGrid() { return str_grid; }
+    string getStrGrid()
+    {
+        return str_grid;
+    }
     int **getMatrGrid() { return grid; }
     int getSizeXMatr() { return sizeX; }
     int getSizeYMatr() { return sizeY; }

@@ -37,7 +37,7 @@ public class Patrulla : MonoBehaviour
     public float changeTargetDistance = 0.1f;
     public int currentTarget = 0;
     public List<List<float>> lista_matriz = new List<List<float>>();
-    public List<float> lista_interna= new List<float>();
+    public List<float> lista_interna = new List<float>();
     public static GameObject[] gameObjects;
     public bool enviar_mensaje = true;
 
@@ -83,7 +83,7 @@ public class Patrulla : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
         rb = GetComponent<Rigidbody2D>();
         transform.position = waypoints[waypointIndex].transform.position;
 
@@ -129,10 +129,11 @@ public class Patrulla : MonoBehaviour
 
     private bool MoveRuta()
     {
-	
-        Vector3 target = new Vector3(lista_matriz[currentTarget][0],lista_matriz[currentTarget][1],0);
+
+        Vector3 target = new Vector3(lista_matriz[currentTarget][0], lista_matriz[currentTarget][1], 0);
         Vector3 distanciaVector = target - transform.position;
-        if(distanciaVector.magnitude <= changeTargetDistance){
+        if (distanciaVector.magnitude <= changeTargetDistance)
+        {
             return true;
         }
 
@@ -146,9 +147,10 @@ public class Patrulla : MonoBehaviour
     {
 
         currentTarget++;
-        if(currentTarget >= lista_matriz.Count){
+        if (currentTarget >= lista_matriz.Count)
+        {
             // Ya llego al objetivo 
-            currentTarget = -1;   
+            currentTarget = -1;
         }
 
         return currentTarget;
@@ -160,43 +162,51 @@ public class Patrulla : MonoBehaviour
         if (follow)
         {
             Move();
-        }else{
-            
-            if(enviar_mensaje){
+        }
+        else
+        {
+
+            if (enviar_mensaje)
+            {
 
                 // Enviar posiciones de los espectros y asignar nueva posicion del jugador
                 Patrulla valor1;
-                for(int i=0; i<3; i++){
+                for (int i = 0; i < 3; i++)
+                {
                     Client.Instance.sendMsgUDP("espectros,pos," + i + "," +
                         PlayerMovement.escaleToServerX((int)gameObjects[i].GetComponent<Patrulla>().transform.position.x) +
                         "," +
                         PlayerMovement.escaleToServerY((int)gameObjects[i].GetComponent<Patrulla>().transform.position.y) +
                         "\n"
                         );
-                    
+
                     valor1 = gameObjects[i].GetComponent<Patrulla>();
                     valor1.pos_x_anterior = (int)player.position.x;
                     valor1.pos_y_anterior = (int)player.position.y;
-                }                  
+                }
 
                 // Solicitar breadcrumbing y aStar
                 Debug.Log("Enviando mensaje");
                 Patrulla valor;
-                for(int i=0; i<3; i++){
+                for (int i = 0; i < 3; i++)
+                {
                     valor = gameObjects[i].GetComponent<Patrulla>();
-                    if(valor.follow==false && valor.enviar_mensaje==true){
-                        Client.Instance.sendMsgUDP("dentroVision,"+i+",");
+                    if (valor.follow == false && valor.enviar_mensaje == true)
+                    {
+                        Client.Instance.sendMsgUDP("dentroVision," + i + ",");
                     }
                 }
 
-                enviar_mensaje=false;
+                enviar_mensaje = false;
             }
 
-            if(pos_x_anterior!=(int)player.position.x || pos_y_anterior!=(int)player.position.y){
+            if (pos_x_anterior != (int)player.position.x || pos_y_anterior != (int)player.position.y)
+            {
 
                 // Asignar nueva posicion del jugador
                 Patrulla valor1;
-                for(int i=0; i<3; i++){
+                for (int i = 0; i < 3; i++)
+                {
                     valor1 = gameObjects[i].GetComponent<Patrulla>();
                     valor1.pos_x_anterior = (int)player.position.x;
                     valor1.pos_y_anterior = (int)player.position.y;
@@ -206,20 +216,24 @@ public class Patrulla : MonoBehaviour
 
                 // Volver a solicitur algoritmos
                 Patrulla valor2;
-                for(int i=0; i<3; i++){
+                for (int i = 0; i < 3; i++)
+                {
                     valor2 = gameObjects[i].GetComponent<Patrulla>();
-                    if(valor2.detecto==true){
-                        valor2.enviar_mensaje=true;
+                    if (valor2.detecto == true)
+                    {
+                        valor2.enviar_mensaje = true;
                     }
                 }
             }
 
-            if(currentTarget!=-1){
-                if(MoveRuta()){
+            if (currentTarget != -1)
+            {
+                if (MoveRuta())
+                {
                     currentTarget = GetNextTarget();
-                } 
+                }
             }
-  
+
         }
 
         detected = false;
@@ -237,7 +251,9 @@ public class Patrulla : MonoBehaviour
                 {
                     boxCollider.isTrigger = true;
                 }
-            }else{
+            }
+            else
+            {
                 //follow=true;
             }
 
@@ -252,18 +268,19 @@ public class Patrulla : MonoBehaviour
         {
             boxCollider.isTrigger = true;
             collision.gameObject.GetComponent<PlayerMovement>().setLife(player.getLife() - 1);
-
+            Client.Instance.sendMsgTCP("player,life," + player.getLife().ToString() + "\n");
             yield return new WaitForSeconds(1);
 
             boxCollider.isTrigger = false;
             collision.gameObject.GetComponent<PlayerMovement>().restartPlayerPos();
             collision.gameObject.GetComponent<PlayerMovement>().setLife(3);
+            Client.Instance.sendMsgTCP("player,life," + player.getLife().ToString() + "\n");
         }
         else
         {
             boxCollider.isTrigger = true;
             collision.gameObject.GetComponent<PlayerMovement>().setLife(player.getLife() - 1);
-
+            Client.Instance.sendMsgTCP("player,life," + player.getLife().ToString() + "\n");
             yield return new WaitForSeconds(3);
             boxCollider.isTrigger = false;
         }
