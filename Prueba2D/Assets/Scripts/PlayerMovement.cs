@@ -133,6 +133,11 @@ public class PlayerMovement : MonoBehaviour
                 Debug.Log("Rojo encontrado" + i);
                 lista_espectros += ",Rojo";
             }
+            else if (GameObject.Find("BLUE") || GameObject.Find("BLUE (1)") || GameObject.Find("BLUE (2)"))
+            {
+                Debug.Log("Azul encontrado" + i);
+                lista_espectros += ",Azul";
+            }
         }
         Client.Instance.sendMsgUDP("level," + (Win.scene - 1) + lista_espectros + "\n");
 

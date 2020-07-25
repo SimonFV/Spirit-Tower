@@ -188,8 +188,8 @@ void game::updateAlgorithm(string data)
 
     spdlog::info("El espectro " + key + " detecto al jugador");
 
-    if (key == "0")
-    {   
+    //if (key == "0")
+    //{   
         string msj_ruta;
 
         // A los otros espectros -> enviar aStar
@@ -267,7 +267,7 @@ void game::updateAlgorithm(string data)
             }
         }
 
-    }
+    //}
     /*else if (key == "1")
     {
         string msj_ruta = key + "," + "-5" + "_" + "0" + "/" + "-5" + "_" + "7" + "/" + "-5" + "_" + "12" + "/";
