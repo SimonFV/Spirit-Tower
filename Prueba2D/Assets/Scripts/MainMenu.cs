@@ -17,7 +17,7 @@ public class MainMenu : MonoBehaviour
         {
             if (Client.Instance.isConnected())
             {
-                SceneManager.LoadScene(4);
+                SceneManager.LoadScene(1);
             }
             else
             {

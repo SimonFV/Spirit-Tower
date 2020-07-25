@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 26015710}
   m_Layer: 0
   m_Name: eye
-  m_TagString: Enemy
+  m_TagString: Ghost1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

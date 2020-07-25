@@ -5880,7 +5880,7 @@ GameObject:
   - component: {fileID: 1028853838}
   m_Layer: 0
   m_Name: eye
-  m_TagString: Enemy
+  m_TagString: Ghost1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -39557,7 +39557,7 @@ GameObject:
   - component: {fileID: 1091720858}
   m_Layer: 0
   m_Name: eye3
-  m_TagString: Enemy
+  m_TagString: Ghost1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -41366,7 +41366,7 @@ GameObject:
   - component: {fileID: 1609443430}
   m_Layer: 0
   m_Name: eye2
-  m_TagString: Enemy
+  m_TagString: Ghost1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
