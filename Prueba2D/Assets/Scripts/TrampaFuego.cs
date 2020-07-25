@@ -18,18 +18,19 @@ public class TrampaFuego : MonoBehaviour
         {
             boxCollider.isTrigger = true;
             collision.gameObject.GetComponent<PlayerMovement>().setLife(player.getLife() - 1);
-
+            Client.Instance.sendMsgTCP("player,life," + player.getLife().ToString() + "\n");
             yield return new WaitForSeconds(1);
 
             boxCollider.isTrigger = false;
             collision.gameObject.GetComponent<PlayerMovement>().restartPlayerPos();
             collision.gameObject.GetComponent<PlayerMovement>().setLife(3);
+            Client.Instance.sendMsgTCP("player,life," + player.getLife().ToString() + "\n");
         }
         else
         {
             boxCollider.isTrigger = true;
             collision.gameObject.GetComponent<PlayerMovement>().setLife(player.getLife() - 1);
-
+            Client.Instance.sendMsgTCP("player,life," + player.getLife().ToString() + "\n");
             yield return new WaitForSeconds(1);
             boxCollider.isTrigger = false;
         }
@@ -38,7 +39,7 @@ public class TrampaFuego : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-    
+
     }
 
     // Update is called once per frame
@@ -54,7 +55,8 @@ public class TrampaFuego : MonoBehaviour
             boxCollider.isTrigger = true;
             animator.SetBool("Activar", false);
         }
-        if (cont == 50) {
+        if (cont == 50)
+        {
             cont = -21;
         }
         cont++;
@@ -65,6 +67,7 @@ public class TrampaFuego : MonoBehaviour
         PlayerMovement player = collision.gameObject.GetComponent<PlayerMovement>();
         if (collision.gameObject.tag == "Player" && player.getLife() > 0)
         {
+            Client.Instance.sendMsgTCP("mele,fuego");
             StartCoroutine(waiter(collision, player));
         }
     }

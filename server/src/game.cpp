@@ -541,10 +541,18 @@ void game::updateMele(string data)
 {
     if (data == "ghost")
     {
-        spdlog::info("Atacando jugador.");
+        spdlog::info("Ataque enemigo: Jugador dañado.");
     }
     else if (data == "player")
     {
-        spdlog::info("Atacando espectro.");
+        spdlog::info("Espectro eliminado.");
+    }
+    else if (data == "fuego")
+    {
+        spdlog::info("Trampa de fuego: Jugador dañado.");
+    }
+    else if (data == "picos")
+    {
+        spdlog::info("Trampa de picos: Jugador dañado.");
     }
 }

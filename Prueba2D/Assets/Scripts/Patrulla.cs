@@ -296,13 +296,19 @@ public class Patrulla : MonoBehaviour
             if (Weapon.playerUsingBlade)
             {
                 this.GetComponent<SpriteRenderer>().enabled = false;
+                if (this.transform.Find("Point Light 2D (4)") != null)
+                {
+                    this.transform.Find("Point Light 2D (4)").GetComponent<SpriteRenderer>().enabled = false;
+                }
                 this.follow = false;
                 visionAngle = 0f;
                 visionDistance = 0f;
                 boxCollider.isTrigger = true;
+                Client.Instance.sendMsgTCP("mele,player");
             }
             if (!shield.playerUsingShield && !Weapon.playerUsingBlade)
             {
+                Client.Instance.sendMsgTCP("mele,ghost");
                 PlayerMovement player = collision.gameObject.GetComponent<PlayerMovement>();
                 StartCoroutine(waiter(collision, player));
             }
