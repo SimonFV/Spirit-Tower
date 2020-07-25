@@ -48058,7 +48058,7 @@ MonoBehaviour:
   waypoints:
   - {fileID: 1938671335}
   - {fileID: 1917009990}
-  moveSpeed: 2
+  moveSpeed: 3.3
   changeTargetDistance: 0.1
   currentTarget: 0
   lista_interna: []
@@ -48676,7 +48676,7 @@ MonoBehaviour:
   waypoints:
   - {fileID: 1237703061}
   - {fileID: 190124467}
-  moveSpeed: 2
+  moveSpeed: 3.4
   changeTargetDistance: 0.1
   currentTarget: 0
   lista_interna: []
@@ -48835,7 +48835,7 @@ MonoBehaviour:
   waypoints:
   - {fileID: 1342314836}
   - {fileID: 545666765}
-  moveSpeed: 2
+  moveSpeed: 3.4
   changeTargetDistance: 0.1
   currentTarget: 0
   lista_interna: []
