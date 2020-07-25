@@ -222,44 +222,24 @@ void game::updateAlgorithm(string data)
         }
         else if (aStar_1 == "Source or the destination is blocked")
         {
-            aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[mover_a]->getPosY() + 1,
+            aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[mover_a]->getPosY() - 1,
                                                     ghostList[mover_a]->getPosX()),
                                           make_pair(p1->getPosY(),
                                                     p1->getPosX()));
             if (aStar_1 == "Source or the destination is blocked")
             {
-                aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[mover_a]->getPosY() - 1,
-                                                        ghostList[mover_a]->getPosX()),
+                aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[mover_a]->getPosY() + 1,
+                                                        ghostList[mover_a]->getPosX() - 1),
                                               make_pair(p1->getPosY(),
                                                         p1->getPosX()));
-                if (aStar_1 == "Source or the destination is blocked")
-                {
-                    aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[mover_a]->getPosY() + 1,
-                                                            ghostList[mover_a]->getPosX() - 1),
-                                                  make_pair(p1->getPosY(),
-                                                            p1->getPosX()));
-                    msj_ruta = to_string(mover_a) + "," + aStar_1;
-                    server::getInstance()->sendMsgUdp(msj_ruta);
-                }
-                else
-                {
-                    msj_ruta = to_string(mover_a) + "," + aStar_1;
-                    server::getInstance()->sendMsgUdp(msj_ruta);
-                }
+                msj_ruta = to_string(mover_a) + "," + aStar_1;
+                server::getInstance()->sendMsgUdp(msj_ruta);
             }
             else
             {
                 msj_ruta = to_string(mover_a) + "," + aStar_1;
                 server::getInstance()->sendMsgUdp(msj_ruta);
             }
-        }
-        else if (aStar_1 == "We are already at the destination")
-        {
-            aStar_1 = "Error";
-        }
-        else if (aStar_1 == "No encontrado")
-        {
-            aStar_1 = "Error";
         }
         else
         {
