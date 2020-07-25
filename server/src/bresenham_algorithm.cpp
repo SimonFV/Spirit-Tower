@@ -21,12 +21,12 @@ std::string ruta_bresenham(vector<vector<int>> ruta){
         for(unsigned int j=0; j<b; j++){
 			if(j==0){
 				ruta_a_seguir += to_string(ruta[i][j]);
-				ruta_a_seguir += ",";
+				ruta_a_seguir += "_";
 			}else{
 				ruta_a_seguir += to_string(ruta[i][j]);
 			}
         }
-        ruta_a_seguir += "-"; 
+        ruta_a_seguir += "/"; 
     }
 
     return ruta_a_seguir;
