@@ -8038,6 +8038,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2c47883f6c24de41859e346aac5d73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grid: {fileID: 0}
   player: {fileID: 1057140453}
   head: {fileID: 710986208}
   visionAngle: 360
@@ -8047,7 +8048,7 @@ MonoBehaviour:
   waypoints:
   - {fileID: 731238786}
   - {fileID: 487600365}
-  moveSpeed: 2
+  moveSpeed: 3.3
   changeTargetDistance: 0.1
   currentTarget: 0
   lista_interna: []
@@ -9148,6 +9149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2c47883f6c24de41859e346aac5d73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grid: {fileID: 0}
   player: {fileID: 1057140453}
   head: {fileID: 1026999117}
   visionAngle: 360
@@ -9157,7 +9159,7 @@ MonoBehaviour:
   waypoints:
   - {fileID: 1806472355}
   - {fileID: 1736982395}
-  moveSpeed: 2
+  moveSpeed: 3.2
   changeTargetDistance: 0.1
   currentTarget: 0
   lista_interna: []
@@ -68009,6 +68011,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2c47883f6c24de41859e346aac5d73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grid: {fileID: 0}
   player: {fileID: 1057140453}
   head: {fileID: 1936116051}
   visionAngle: 360
@@ -68018,7 +68021,7 @@ MonoBehaviour:
   waypoints:
   - {fileID: 891793297}
   - {fileID: 1503191197}
-  moveSpeed: 2
+  moveSpeed: 3.4
   changeTargetDistance: 0.1
   currentTarget: 0
   lista_interna: []

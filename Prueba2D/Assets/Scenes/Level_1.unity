@@ -376,6 +376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2c47883f6c24de41859e346aac5d73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grid: {fileID: 0}
   player: {fileID: 1031413842}
   head: {fileID: 266066882}
   visionAngle: 54
@@ -385,11 +386,14 @@ MonoBehaviour:
   waypoints:
   - {fileID: 1272516251}
   - {fileID: 540124267}
-  moveSpeed: 3
+  moveSpeed: 3.3
   changeTargetDistance: 0.1
   currentTarget: 0
-  lista_interna: 
+  lista_interna: []
   enviar_mensaje: 1
+  pos_x_anterior: 0
+  pos_y_anterior: 0
+  detecto: 0
 --- !u!212 &266066881
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1949,6 +1953,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2c47883f6c24de41859e346aac5d73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grid: {fileID: 0}
   player: {fileID: 1031413842}
   head: {fileID: 949514463}
   visionAngle: 360
@@ -1958,11 +1963,14 @@ MonoBehaviour:
   waypoints:
   - {fileID: 366163932}
   - {fileID: 96512586}
-  moveSpeed: 2
+  moveSpeed: 3.3
   changeTargetDistance: 0.1
   currentTarget: 0
-  lista_interna: 
+  lista_interna: []
   enviar_mensaje: 1
+  pos_x_anterior: 0
+  pos_y_anterior: 0
+  detecto: 0
 --- !u!212 &949514462
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -32193,6 +32201,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2c47883f6c24de41859e346aac5d73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grid: {fileID: 0}
   player: {fileID: 1031413842}
   head: {fileID: 1833825074}
   visionAngle: 360
@@ -32202,11 +32211,14 @@ MonoBehaviour:
   waypoints:
   - {fileID: 1829720485}
   - {fileID: 2129876198}
-  moveSpeed: 2
+  moveSpeed: 3.3
   changeTargetDistance: 0.1
   currentTarget: 0
-  lista_interna: 
+  lista_interna: []
   enviar_mensaje: 1
+  pos_x_anterior: 0
+  pos_y_anterior: 0
+  detecto: 0
 --- !u!212 &1833825073
 SpriteRenderer:
   m_ObjectHideFlags: 0
