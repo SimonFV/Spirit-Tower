@@ -211,12 +211,48 @@ void game::updateAlgorithm(string data)
                                                        p1->getPosX()));
         if (aStar_1 == "Source is invalid")
         {
+            aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[1]->getPosY() + 1,
+                                                    ghostList[1]->getPosX()),
+                                          make_pair(p1->getPosY(),
+                                                    p1->getPosX()));
+            msj_ruta = "1," + aStar_1;
+            server::getInstance()->sendMsgUdp(msj_ruta);
         }
         else if (aStar_1 == "Destination is invalid")
         {
         }
         else if (aStar_1 == "Source or the destination is blocked")
         {
+            aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[1]->getPosY() + 1,
+                                                    ghostList[1]->getPosX()),
+                                          make_pair(p1->getPosY(),
+                                                    p1->getPosX()));
+            if (aStar_1 == "Source or the destination is blocked")
+            {
+                aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[1]->getPosY() - 1,
+                                                        ghostList[1]->getPosX()),
+                                              make_pair(p1->getPosY(),
+                                                        p1->getPosX()));
+                if (aStar_1 == "Source or the destination is blocked")
+                {
+                    aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[1]->getPosY() + 1,
+                                                            ghostList[1]->getPosX() - 1),
+                                                  make_pair(p1->getPosY(),
+                                                            p1->getPosX()));
+                    msj_ruta = "1," + aStar_1;
+                    server::getInstance()->sendMsgUdp(msj_ruta);
+                }
+                else
+                {
+                    msj_ruta = "1," + aStar_1;
+                    server::getInstance()->sendMsgUdp(msj_ruta);
+                }
+            }
+            else
+            {
+                msj_ruta = "1," + aStar_1;
+                server::getInstance()->sendMsgUdp(msj_ruta);
+            }
         }
         else if (aStar_1 == "We are already at the destination")
         {
