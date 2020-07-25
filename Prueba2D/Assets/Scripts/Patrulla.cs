@@ -298,7 +298,7 @@ public class Patrulla : MonoBehaviour
                 this.GetComponent<SpriteRenderer>().enabled = false;
                 if (this.transform.Find("Point Light 2D (4)") != null)
                 {
-                    this.transform.Find("Point Light 2D (4)").GetComponent<SpriteRenderer>().enabled = false;
+                    Destroy(this.transform.Find("Point Light 2D (4)").gameObject);
                 }
                 this.follow = false;
                 visionAngle = 0f;

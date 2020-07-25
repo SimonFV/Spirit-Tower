@@ -172,72 +172,80 @@ public class Client : MonoBehaviour
 
     public void procesarDatos(string data)
     {
-
-        Debug.Log("Inicio");
-        Debug.Log(data);
-
-        string key = "";
-        int i = 0;
-        for (i = 0; i < data.Length && data[i] != ','; i++)
+        try
         {
-            key += data[i];
-        }
-        //ERROR
-        i++;
-        data = data.Remove(0, i);
+            Debug.Log("Inicio");
+            Debug.Log(data);
 
-        //Debug.Log(key);
-
-        int validar = 0;
-        if(data[validar] != 'E'){
-
-            // Guardando ruta en matriz
-            List<List<float>> list2 = new List<List<float>>();
-            i = 0;
-            string valor_x;
-            string valor_y;
+            string key = "";
+            int i = 0;
+            for (i = 0; i < data.Length && data[i] != ','; i++)
+            {
+                key += data[i];
+            }
             //ERROR
-            while (data.Length != 1) // El msj tiene un caracter extra¿?
+            i++;
+            data = data.Remove(0, i);
+
+            //Debug.Log(key);
+
+            int validar = 0;
+            if (data[validar] != 'E')
             {
 
-                // Saca el valor de x
+                // Guardando ruta en matriz
+                List<List<float>> list2 = new List<List<float>>();
                 i = 0;
-                valor_x = "";
-                while (data[i] != '_')
+                string valor_x;
+                string valor_y;
+                //ERROR
+                while (data.Length != 1) // El msj tiene un caracter extra¿?
                 {
-                    valor_x += data[i];
-                    i++;
-                }
-                i++;
-                data = data.Remove(0, i);
 
-                // Saca el valor de y
-                i = 0;
-                valor_y = "";
-                while (data[i] != '/')
-                {
-                    valor_y += data[i];
+                    // Saca el valor de x
+                    i = 0;
+                    valor_x = "";
+                    while (data[i] != '_')
+                    {
+                        valor_x += data[i];
+                        i++;
+                    }
                     i++;
-                }
-                i++;
-                data = data.Remove(0, i);
+                    data = data.Remove(0, i);
 
-                // Push, valor_x, valor_y
-                List<float> list1 = new List<float>();
-                list1.Add(PlayerMovement.escaleToClientX(Int16.Parse(valor_x)) + 0.5f);
-                list1.Add(PlayerMovement.escaleToClientY(Int16.Parse(valor_y)) + 0.5f);
-                list2.Add(list1);
+                    // Saca el valor de y
+                    i = 0;
+                    valor_y = "";
+                    while (data[i] != '/')
+                    {
+                        valor_y += data[i];
+                        i++;
+                    }
+                    i++;
+                    data = data.Remove(0, i);
+
+                    // Push, valor_x, valor_y
+                    List<float> list1 = new List<float>();
+                    list1.Add(PlayerMovement.escaleToClientX(Int16.Parse(valor_x)) + 0.5f);
+                    list1.Add(PlayerMovement.escaleToClientY(Int16.Parse(valor_y)) + 0.5f);
+                    list2.Add(list1);
+
+                }
+
+                Patrulla valor = Patrulla.gameObjects[Int16.Parse(key)].GetComponent<Patrulla>();
+                valor.lista_matriz = list2;
+                valor.follow = false;
+                valor.enviar_mensaje = false;
+                valor.currentTarget = 0;
+
+                Debug.Log("Fin");
 
             }
 
-            Patrulla valor = Patrulla.gameObjects[Int16.Parse(key)].GetComponent<Patrulla>();
-            valor.lista_matriz = list2;
-            valor.follow = false;
-            valor.enviar_mensaje = false;
-            valor.currentTarget = 0;
-
-            Debug.Log("Fin");
-
+        }
+        catch (IndexOutOfRangeException)
+        {
+            Debug.Log("Index error.");
         }
 
     }
