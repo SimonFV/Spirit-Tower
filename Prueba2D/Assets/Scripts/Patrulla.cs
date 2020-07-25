@@ -173,7 +173,7 @@ public class Patrulla : MonoBehaviour
 
                 // Enviar posiciones de los espectros y asignar nueva posicion del jugador
                 Patrulla valor1;
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < Patrulla.gameObjects.Length; i++)
                 {
                     Client.Instance.sendMsgUDP("espectros,pos," + i + "," +
                         PlayerMovement.escaleToServerX((int)gameObjects[i].GetComponent<Patrulla>().transform.position.x) +
@@ -190,7 +190,7 @@ public class Patrulla : MonoBehaviour
                 // Solicitar breadcrumbing y aStar
                 Debug.Log("Enviando mensaje");
                 Patrulla valor;
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < Patrulla.gameObjects.Length; i++)
                 {
                     valor = gameObjects[i].GetComponent<Patrulla>();
                     if (valor.follow == false && valor.enviar_mensaje == true)
@@ -207,7 +207,7 @@ public class Patrulla : MonoBehaviour
 
                 // Asignar nueva posicion del jugador
                 Patrulla valor1;
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < Patrulla.gameObjects.Length; i++)
                 {
                     valor1 = gameObjects[i].GetComponent<Patrulla>();
                     valor1.pos_x_anterior = (int)player.position.x;
@@ -218,7 +218,7 @@ public class Patrulla : MonoBehaviour
 
                 // Volver a solicitur algoritmos
                 Patrulla valor2;
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < Patrulla.gameObjects.Length; i++)
                 {
                     valor2 = gameObjects[i].GetComponent<Patrulla>();
                     if (valor2.detecto == true)
