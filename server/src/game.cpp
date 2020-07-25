@@ -60,7 +60,7 @@ string game::process_data(string data)
         }
         data.erase(0, 6);
         newBitMap(data);
-        //spdlog::info(str_grid);
+        spdlog::info(str_grid);
         return "";
     }
     else if (key == "player")
@@ -165,17 +165,43 @@ void game::updateAlgorithm(string data)
     if (key == "0")
     {   
         // Espectro "key" -> enviar breadcrumbing
-        string msj_ruta = key+","+"-5"+"_"+"0"+"/"+"-5"+"_"+"7"+"/"+"-5"+"_"+"12"+"/";
+        string msj_ruta = key+","+"9"+"_"+"18"+"/"+"9"+"_"+"12"+"/"+"9"+"_"+"6"+"/";
         server::getInstance()->sendMsgUdp(msj_ruta);
 
         // A los otros espectros -> enviar aStar
-        key = "1";
-        msj_ruta = key+","+"0"+"_"+"0"+"/"+"0"+"_"+"7"+"/"+"0"+"_"+"12"+"/";
-        server::getInstance()->sendMsgUdp(msj_ruta);
+        // ---- Ejecutar A Star (y_inicial, x_inicial, y_final, x_final)
 
-        key = "2";
-        msj_ruta = key+","+"5"+"_"+"0"+"/"+"5"+"_"+"7"+"/"+"5"+"_"+"12"+"/";
-        server::getInstance()->sendMsgUdp(msj_ruta);
+        // Espectro 1
+        spdlog::info(ghostList[1]->getPosX());
+        spdlog::info(ghostList[1]->getPosY());
+        spdlog::info(p1->getPosX());
+        spdlog::info(p1->getPosY());
+        string aStar_1 = a1->algoritmo_aStar(make_pair(ghostList[1]->getPosY(), 
+                                                        ghostList[1]->getPosX()),
+                                                            make_pair(p1->getPosY(),
+                                                                p1->getPosX()));
+        if(aStar_1 == "Source is invalid"){
+
+        }else if(aStar_1 == "Destination is invalid"){
+
+        }else if(aStar_1 == "Source or the destination is blocked"){
+
+        }else if(aStar_1 == "We are already at the destination"){
+
+        }else if(aStar_1 == "No encontrado"){
+
+        }else{
+            msj_ruta = "1," + aStar_1;
+            server::getInstance()->sendMsgUdp(msj_ruta);
+        }
+
+
+        // Espectro 2
+        //key = "2";
+        //msj_ruta = key+","+"5"+"_"+"0"+"/"+"5"+"_"+"7"+"/"+"5"+"_"+"12"+"/";
+        //server::getInstance()->sendMsgUdp(msj_ruta);
+
+
          
     }else if (key == "1")
     {
@@ -191,6 +217,7 @@ void game::updateAlgorithm(string data)
         msj_ruta = key+","+"5"+"_"+"0"+"/"+"5"+"_"+"7"+"/"+"5"+"_"+"12"+"/";
         server::getInstance()->sendMsgUdp(msj_ruta);
 
+
     }else if (key == "2")
     {
         string msj_ruta = key+","+"-5"+"_"+"0"+"/"+"-5"+"_"+"7"+"/"+"-5"+"_"+"12"+"/";
@@ -205,17 +232,6 @@ void game::updateAlgorithm(string data)
         msj_ruta = key+","+"5"+"_"+"0"+"/"+"5"+"_"+"7"+"/"+"5"+"_"+"12"+"/";
         server::getInstance()->sendMsgUdp(msj_ruta);
     }
-
-    /*
-
-        // Enviar algoritmo
-        // spdlog::info(a1->algoritmo_aStar(make_pair(5, 8), make_pair(11, 23)));
-        // ---- Ejecutar A Star (y_inicial, x_inicial, y_final, x_final)
-        spdlog::info(a1->algoritmo_aStar(make_pair(p1->getPosY(), p1->getPosX()),
-                                         make_pair(ghostList[stoi(ID_ghost)]->getPosY(),
-                                                   ghostList[stoi(ID_ghost)]->getPosX())));
-    */
-
 
     /*
         // ---- Ejecutar Bresenham (x_inicial, y_inicial, x_final, y_final)

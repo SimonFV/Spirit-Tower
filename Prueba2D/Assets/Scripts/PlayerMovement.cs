@@ -299,23 +299,23 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public static float escaleToServerX(float _x)
+    public static int escaleToServerX(int _x)
     {
         return _x - staticTilemap.origin.x;
     }
 
-    public static float escaleToServerY(float _y)
+    public static int escaleToServerY(int _y)
     {
-        return staticTilemap.origin.y + staticTilemap.size.y - _y;
+        return staticTilemap.origin.y + staticTilemap.size.y - _y - 1;
     }
 
-    public static float escaleToClientX(float _x)
+    public static int escaleToClientX(int _x)
     {
         return _x + staticTilemap.origin.x;
     }
 
-    public static float escaleToClientY(float _y)
+    public static int escaleToClientY(int _y)
     {
-        return staticTilemap.origin.y + staticTilemap.size.y - _y;
+        return staticTilemap.origin.y + staticTilemap.size.y - _y - 1;
     }
 }

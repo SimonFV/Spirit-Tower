@@ -36,10 +36,15 @@ public class Patrulla : MonoBehaviour
     // Variables nuevas
     public float changeTargetDistance = 0.1f;
     public int currentTarget = 0;
-    public List<List<int>> lista_matriz = new List<List<int>>();
-    public List<int> lista_interna= new List<int>();
+    public List<List<float>> lista_matriz = new List<List<float>>();
+    public List<float> lista_interna= new List<float>();
     public static GameObject[] gameObjects;
     public bool enviar_mensaje = true;
+
+    public int pos_x_anterior;
+    public int pos_y_anterior;
+
+    public bool detecto = false;
 
     // Fin
 
@@ -143,7 +148,7 @@ public class Patrulla : MonoBehaviour
         currentTarget++;
         if(currentTarget >= lista_matriz.Count){
             // Ya llego al objetivo 
-            currentTarget = 0;   
+            currentTarget = -1;   
         }
 
         return currentTarget;
@@ -156,17 +161,22 @@ public class Patrulla : MonoBehaviour
         {
             Move();
         }else{
-
+            
             if(enviar_mensaje){
 
-                // Enviar posiciones de los espectros
+                // Enviar posiciones de los espectros y asignar nueva posicion del jugador
+                Patrulla valor1;
                 for(int i=0; i<3; i++){
                     Client.Instance.sendMsgUDP("espectros,pos," + i + "," +
-                        PlayerMovement.escaleToServerX(gameObjects[i].GetComponent<Patrulla>().transform.position.x) +
+                        PlayerMovement.escaleToServerX((int)gameObjects[i].GetComponent<Patrulla>().transform.position.x) +
                         "," +
-                        PlayerMovement.escaleToServerY(gameObjects[i].GetComponent<Patrulla>().transform.position.y) +
+                        PlayerMovement.escaleToServerY((int)gameObjects[i].GetComponent<Patrulla>().transform.position.y) +
                         "\n"
                         );
+                    
+                    valor1 = gameObjects[i].GetComponent<Patrulla>();
+                    valor1.pos_x_anterior = (int)player.position.x;
+                    valor1.pos_y_anterior = (int)player.position.y;
                 }                  
 
                 // Solicitar breadcrumbing y aStar
@@ -181,10 +191,35 @@ public class Patrulla : MonoBehaviour
 
                 enviar_mensaje=false;
             }
-        
-            if(MoveRuta()){
-                currentTarget = GetNextTarget();
-            }   
+
+            if(pos_x_anterior!=(int)player.position.x || pos_y_anterior!=(int)player.position.y){
+
+                // Asignar nueva posicion del jugador
+                Patrulla valor1;
+                for(int i=0; i<3; i++){
+                    valor1 = gameObjects[i].GetComponent<Patrulla>();
+                    valor1.pos_x_anterior = (int)player.position.x;
+                    valor1.pos_y_anterior = (int)player.position.y;
+                    valor1.lista_matriz.Clear();
+                    valor1.currentTarget = -1;
+                }
+
+                // Volver a solicitur algoritmos
+                Patrulla valor2;
+                for(int i=0; i<3; i++){
+                    valor2 = gameObjects[i].GetComponent<Patrulla>();
+                    if(valor2.detecto==true){
+                        valor2.enviar_mensaje=true;
+                    }
+                }
+            }
+
+            if(currentTarget!=-1){
+                if(MoveRuta()){
+                    currentTarget = GetNextTarget();
+                } 
+            }
+  
         }
 
         detected = false;
@@ -197,6 +232,7 @@ public class Patrulla : MonoBehaviour
             {
                 detected = true;
                 follow = false;
+                detecto = true;
                 if (!this.GetComponent<SpriteRenderer>().enabled)
                 {
                     boxCollider.isTrigger = true;

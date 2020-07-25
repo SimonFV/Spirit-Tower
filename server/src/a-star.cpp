@@ -89,10 +89,10 @@ std::string tracePath(vector<vector<cell>> cellDetails1, Pair dest)
 	{ 
 		pair<int,int> p = Path.top(); 
 		Path.pop();
-		ruta_aStar += to_string(p.first);
-		ruta_aStar += ",";
 		ruta_aStar += to_string(p.second);
-		ruta_aStar += "-";
+		ruta_aStar += "_";
+		ruta_aStar += to_string(p.first);
+		ruta_aStar += "/";
 	} 
 
 	return ruta_aStar; 

@@ -68,7 +68,7 @@ public class Client : MonoBehaviour
 
     }
 
-
+    /*
     void OnDestroy()
     {
         if (tcpClient.Connected)
@@ -76,7 +76,7 @@ public class Client : MonoBehaviour
             tcpClient.Close();
         }
     }
-
+    */
 
 
 
@@ -189,7 +189,7 @@ public class Client : MonoBehaviour
         //Debug.Log(key);
 
         // Guardando ruta en matriz
-        List<List<int>> list2 = new List<List<int>>();
+        List<List<float>> list2 = new List<List<float>>();
         i = 0;
         string valor_x;
         string valor_y;
@@ -220,9 +220,9 @@ public class Client : MonoBehaviour
             data = data.Remove(0, i);
 
             // Push, valor_x, valor_y
-            List<int> list1 = new List<int>();
-            list1.Add(Int16.Parse(valor_x));
-            list1.Add(Int16.Parse(valor_y));
+            List<float> list1 = new List<float>();
+            list1.Add(PlayerMovement.escaleToClientX(Int16.Parse(valor_x)) + 0.5f);
+            list1.Add(PlayerMovement.escaleToClientY(Int16.Parse(valor_y)) + 0.5f);
             list2.Add(list1);
 
         }
@@ -231,6 +231,7 @@ public class Client : MonoBehaviour
         valor.lista_matriz = list2;
         valor.follow = false;
         valor.enviar_mensaje = false;
+        valor.currentTarget = 0;
 
         Debug.Log("Fin");
 
