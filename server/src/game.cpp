@@ -360,6 +360,9 @@ void game::updateLevel(string data)
         ghostList[0] = new blueGhost(0);
         ghostList[1] = new blueGhost(1);
         ghostList[2] = new blueGhost(2);
+        ghostList[3] = new blueGhost(3);
+        ghostList[4] = new blueGhost(4);
+        ghostList[5] = new blueGhost(5);
 
         a1->setPopulation(a1->evolucionar(a1->getPopulation(), 5, 5));
         spdlog::info("Poblacion Evolucionada");
