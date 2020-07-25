@@ -192,7 +192,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!95 &178695014
 Animator:
   serializedVersion: 3
@@ -968,7 +968,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &734609623
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -40729,7 +40729,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1256714033}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 37, y: 11.47, z: 0}
+  m_LocalPosition: {x: 30.1, y: 7.4, z: 0}
   m_LocalScale: {x: 2.048633, y: 0.86634046, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -40956,7 +40956,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!95 &1475230356
 Animator:
   serializedVersion: 3
